@@ -94,6 +94,7 @@ x86_build:
     - meson _build
       --prefix $PWD/install
       --buildtype debug
+      -Dauto_features=enabled
       ${EXTRA_OPTION}
     - ninja -C _build -j${FDO_CI_CONCURRENT:-4}
     - ninja -C _build install
@@ -104,7 +105,6 @@ x86_build:
     - .build
   variables:
     EXTRA_OPTION: >
-      -Dauto_features=enabled
       -Dlibdecor-0:gtk=disabled
       -Dlibdecor-0:demo=false
 
@@ -126,4 +126,11 @@ build-mingw:
   variables:
     EXTRA_OPTION: >
       --cross-file=.gitlab-ci/x86_64-w64-mingw32
-      -Dglut=enabled
+      -Degl=disabled
+      -Dgles1=disabled
+      -Dgles2=disabled
+      -Dlibdrm=disabled
+      -Dosmesa=disabled
+      -Dvulkan=disabled
+      -Dwayland=disabled
+      -Dx11=disabled
