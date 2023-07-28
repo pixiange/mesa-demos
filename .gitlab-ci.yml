@@ -3,7 +3,7 @@ variables:
 
 include:
   - project: 'freedesktop/ci-templates'
-    ref: 3f37cc0e461f5b0c815409bf6f55759f26a74e9c
+    ref: 16bc29078de5e0a067ff84a1a199a3760d3b3811
     file: '/templates/debian.yml'
 
 stages:
@@ -34,12 +34,12 @@ x86_build:
     - .fdo.container-build@debian
     - .ci-run-policy
   variables:
-    FDO_DISTRIBUTION_VERSION: bullseye-slim
+    FDO_DISTRIBUTION_VERSION: bookworm-slim
     FDO_REPO_SUFFIX: "debian/$CI_JOB_NAME"
     # No need to pull the whole repo to build the container image
     GIT_STRATEGY: none
     # /!\ Bump the TAG when modifying the DEBS
-    FDO_DISTRIBUTION_TAG: &x86_build "2023-09-20-no-cmake"
+    FDO_DISTRIBUTION_TAG: &x86_build "2024-06-18-bookworm"
     FDO_DISTRIBUTION_PACKAGES: >-
       build-essential
       clang
@@ -55,6 +55,7 @@ x86_build:
       freeglut3-dev
       libcairo2-dev
       libdbus-1-dev
+      libdecor-0-dev
       libdrm-dev
       libegl-dev
       libgbm-dev
@@ -72,7 +73,7 @@ x86_build:
       libxkbcommon-dev
       libxkbcommon-x11-dev
       wayland-protocols
-    FDO_DISTRIBUTION_EXEC: pip3 install meson==0.60.3
+    FDO_DISTRIBUTION_EXEC: pip3 install --break-system-packages meson==0.60.3
 
 .use-x86_build:
   variables:
