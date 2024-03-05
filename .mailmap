@@ -13,6 +13,8 @@ Ben Skeggs <bskeggs@redhat.com> <darktama@beleth.(none)>
 Ben Skeggs <bskeggs@redhat.com> <skeggsb@gmail.com>
 Ben Skeggs <bskeggs@redhat.com> <skeggsb@localhost.localdomain>
 
+Bram Stolk <b.stolk@gmail.com> <bram.stolk@canonical.com>
+
 Brian Paul <brianp@vmware.com> <brian.paul@tungstengraphics.com>
 Brian Paul <brianp@vmware.com> <brian@yutani.localnet.net>
 Brian Paul <brianp@vmware.com> <brian@nostromo.localnet.net>
@@ -20,6 +22,7 @@ Brian Paul <brianp@vmware.com> <brian@i915.localnet.net>
 Brian Paul <brianp@vmware.com> <brian@ps3.localnet.net>
 Brian Paul <brianp@vmware.com> <brianp@vmware.com>
 Brian Paul <brianp@vmware.com> <brian@fc16-x86.home.shipmail.org>
+Brian Paul <brianp@vmware.com> <root@i915.localnet.net>
 
 Chia-I Wu <olvaffe@gmail.com> <olv@lunarg.com>
 
@@ -62,6 +65,8 @@ Jesse Barnes <jesse.barnes@intel.com> <jbarnes@hobbes.(none)>
 Jesse Barnes <jesse.barnes@intel.com> <jbarnes@jbarnes-desktop.localdomain>
 Jesse Barnes <jesse.barnes@intel.com> <jbarnes@virtuousgeek.org>
 
+Jochen Gerlach <jtg@users.sourceforge.net> <jtg>
+
 Jon Turney <jon.turney@dronecode.org.uk> <jon.turney@dronecode.org.uk>
 
 José Fonseca <jfonseca@vmware.com> <j_r_fonseca@yahoo.co.uk>
@@ -77,7 +82,8 @@ Jouk Jansen <joukj@hrem.stm.tudelft.nl> <joukj@tarantella.nano.tudelft.nl>
 
 Karl Schultz <karl.w.schultz@gmail.com> <Karl.W.Schultz@gmail.com>
 Karl Schultz <karl.w.schultz@gmail.com> <k.w.schultz@comcast.net>
-Karl Schultz <karl.w.schultz@gmail.com><kschultz@freedesktop.org>
+Karl Schultz <karl.w.schultz@gmail.com> <kschultz@freedesktop.org>
+Karl Schultz <karl.w.schultz@gmail.com> unknown <kwschult@.na.qualcomm.com>
 
 Keith Packard <keithp@keithp.com> <keithp@neko.keithp.com>
 
@@ -88,9 +94,14 @@ Kristian Høgsberg <krh@bitplanet.net> <krh@redhat.com>
 Kristian Høgsberg <krh@bitplanet.net> <krh@sasori.boston.redhat.com>
 Kristian Høgsberg <krh@bitplanet.net> <krh@temari.boston.redhat.com>
 
+Luc Ma <luc@sietium.com> <onion0709@gmail.com>
+
 Marek Olšák <maraeo@gmail.com> <marek.olsak@amd.com>
 
+Michal Krol <michal@vmware.com> <michal@tungstengraphics.com>
 Michal Krol <michal@vmware.com> <mjkrol@gmail.org>
+Michal Krol <michal@vmware.com> <michal@transistor.(none)>
+Michal Krol <michal@vmware.com> <michal@michal-laptop.(none)>
 
 Michel Dänzer <michel@daenzer.net> <daenzer@vmware.com>
 Michel Dänzer <michel@daenzer.net> <michel.daenzer@amd.com>
@@ -105,15 +116,27 @@ Nicolai Hähnle <nicolai.haehnle@amd.com> <nhaehnle@gmail.com>
 Patrice Mandin <patmandin@gmail.com> <patrice@manoir.racoon.city>
 Patrice Mandin <patmandin@gmail.com> <pmandin@caramail.com>
 
+Renato Caldas <seventhguardian@gmail.com>
+
 Roland Scheidegger <sroland@vmware.com> <rscheidegger@gmx.ch>
 Roland Scheidegger <sroland@vmware.com> <sroland@tungstengraphics.com>
 
 Sean D'Epagnier <sean@depagnier.com> <geckosenator@freedesktop.org>
 
+Sven M. Hallberg <pesco@users.sourceforge.net> <pesco>
+
+Keith Harrison <sio2@users.sourceforge.net> <sio2>
+
 Thierry Vignaud <thierry.vignaud@gmail.com> <tvignaud@mandriva.com>
 
 Thomas Hellstrom <thellstrom@vmware.com> <thellstrom-at-vmware-dot-com>
 Thomas Hellstrom <thellstrom@vmware.com> <thomas-at-tungstengraphics-dot-com>
+
+Thomas Tanner <tanner@gmx.net> <tanner>
+
+Vincent Lejeune <vljn@ovi.com>
+
+Yaakov Selkowitz <yselkowi@redhat.com> <yselkowitz@users.sourceforge.net>
 
 Zack Rusin <zackr@vmware.com> <zack@kde.org>
 Zack Rusin <zackr@vmware.com> <zack@tungstengraphics.com>
