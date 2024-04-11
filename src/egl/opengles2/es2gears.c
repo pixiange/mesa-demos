@@ -364,7 +364,7 @@ gears_draw(void)
    GLfloat transform[16];
    mat4_identity(transform);
 
-   glClearColor(0.0, 0.0, 0.0, 0.5);
+   glClearColor(0.0, 0.0, 0.0, 1.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    /* Translate and rotate the view */

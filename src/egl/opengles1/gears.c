@@ -249,7 +249,7 @@ gears_draw(void)
    static const GLfloat green[4] = { 0.0, 0.8, 0.2, 1.0 };
    static const GLfloat blue[4] = { 0.2, 0.2, 1.0, 1.0 };
 
-   glClearColor(0.0, 0.0, 0.0, 0.5);
+   glClearColor(0.0, 0.0, 0.0, 1.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    glPushMatrix();
