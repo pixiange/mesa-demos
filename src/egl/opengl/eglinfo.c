@@ -152,28 +152,28 @@ static void
 PrintConfigsNormal(unsigned num_configs, struct eglconfig_info *info)
 {
    printf("Configurations:\n");
-   printf("     bf lv colorbuffer dp st  ms    vis   cav bi  renderable  supported\n");
-   printf("  id sz  l  r  g  b  a th cl ns b    id   eat nd gl es es2 vg surfaces \n");
-   /*        ^  ^   ^  ^  ^  ^  ^ ^  ^  ^  ^    ^    ^   ^  ^  ^  ^   ^  ^
-    *        |  |   |  |  |  |  | |  |  |  |    |    |   |  |  |  |   |  |
-    *        |  |   |  |  |  |  | |  |  |  |    |    |   |  |  |  |   |  EGL_SURFACE_TYPE
-    *        |  |   |  |  |  |  | |  |  |  |    |    |   |  EGL_RENDERABLE_TYPE
-    *        |  |   |  |  |  |  | |  |  |  |    |    |   EGL_BIND_TO_TEXTURE_RGB/EGL_BIND_TO_TEXTURE_RGBA
-    *        |  |   |  |  |  |  | |  |  |  |    |    EGL_CONFIG_CAVEAT
-    *        |  |   |  |  |  |  | |  |  |  |    EGL_NATIVE_VISUAL_ID/EGL_NATIVE_VISUAL_TYPE
-    *        |  |   |  |  |  |  | |  |  |  EGL_SAMPLE_BUFFERS
-    *        |  |   |  |  |  |  | |  |  EGL_SAMPLES
-    *        |  |   |  |  |  |  | |  EGL_STENCIL_SIZE
-    *        |  |   |  |  |  |  | EGL_DEPTH_SIZE
-    *        |  |   |  |  |  |  EGL_ALPHA_SIZE
-    *        |  |   |  |  |  EGL_BLUE_SIZE
-    *        |  |   |  |  EGL_GREEN_SIZE
-    *        |  |   |  EGL_RED_SIZE
-    *        |  |   EGL_LEVEL
-    *        |  EGL_BUFFER_SIZE
+   printf("           bf lv colorbuffer dp st  ms    vis   cav bi  renderable  supported\n");
+   printf(" id (hex)  sz  l  r  g  b  a th cl ns b    id   eat nd gl es es2 vg surfaces \n");
+   /*        ^        ^   ^  ^  ^  ^  ^ ^  ^  ^  ^    ^    ^   ^  ^  ^  ^   ^  ^
+    *        |        |   |  |  |  |  | |  |  |  |    |    |   |  |  |  |   |  |
+    *        |        |   |  |  |  |  | |  |  |  |    |    |   |  |  |  |   |  EGL_SURFACE_TYPE
+    *        |        |   |  |  |  |  | |  |  |  |    |    |   |  EGL_RENDERABLE_TYPE
+    *        |        |   |  |  |  |  | |  |  |  |    |    |   EGL_BIND_TO_TEXTURE_RGB/EGL_BIND_TO_TEXTURE_RGBA
+    *        |        |   |  |  |  |  | |  |  |  |    |    EGL_CONFIG_CAVEAT
+    *        |        |   |  |  |  |  | |  |  |  |    EGL_NATIVE_VISUAL_ID/EGL_NATIVE_VISUAL_TYPE
+    *        |        |   |  |  |  |  | |  |  |  EGL_SAMPLE_BUFFERS
+    *        |        |   |  |  |  |  | |  |  EGL_SAMPLES
+    *        |        |   |  |  |  |  | |  EGL_STENCIL_SIZE
+    *        |        |   |  |  |  |  | EGL_DEPTH_SIZE
+    *        |        |   |  |  |  |  EGL_ALPHA_SIZE
+    *        |        |   |  |  |  EGL_BLUE_SIZE
+    *        |        |   |  |  EGL_GREEN_SIZE
+    *        |        |   |  EGL_RED_SIZE
+    *        |        |   EGL_LEVEL
+    *        |        EGL_BUFFER_SIZE
     *        EGL_CONFIG_ID
     */
-   printf("---------------------------------------------------------------------\n");
+   printf("------------------------------------------------------------------------------\n");
    for (int i = 0; i < num_configs; i++) {
       char surface[100] = "";
 
@@ -197,8 +197,8 @@ PrintConfigsNormal(unsigned num_configs, struct eglconfig_info *info)
       if (!ISALPHANUM(vidstr[0]) || !ISALPHANUM(vidstr[1]) || !ISALPHANUM(vidstr[2]) || !ISALPHANUM(vidstr[3]))
          snprintf(vidstr, sizeof(vidstr), "%04x", vid);
 
-      printf("0x%02x %2d %2d %2d %2d %2d %2d %2d %2d %2d%2d  %s%s ",
-             info[i].id, info[i].size, info[i].level,
+      printf("%3d (0x%02x) %2d %2d %2d %2d %2d %2d %2d %2d %2d%2d  %s%s ",
+             info[i].id, info[i].id, info[i].size, info[i].level,
              info[i].red, info[i].green, info[i].blue, info[i].alpha,
              info[i].depth, info[i].stencil,
              info[i].samples, info[i].sample_buffers, vidstr,
@@ -223,7 +223,7 @@ PrintConfigsVerbose(unsigned num_configs, struct eglconfig_info *info)
    printf("Configurations (%u in total):\n", num_configs);
 
    for (int i = 0; i < num_configs; i++) {
-      printf("\nEGL_CONFIG_ID: %3x", info[i].id);
+      printf("\nEGL_CONFIG_ID: %d (%3x)", info[i].id, info[i].id);
       printf("    EGL_BUFFER_SIZE: %d", info[i].size);
       printf("    EGL_LEVEL: %d", info[i].level);
 
