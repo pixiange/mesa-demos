@@ -97,6 +97,7 @@ static GLfloat angle = 0.0;
 
 static GLboolean fullscreen = GL_FALSE; /* Create a single fullscreen window */
 static GLboolean stereo = GL_FALSE;     /* Enable stereo.  */
+static GLint frames = -1;               /* Render N frames and exit, -1 means to run forever */
 static GLint samples = 0;               /* Choose visual with at least N
                                            samples. */
 static GLint swapinterval = 1;          /* Swap interval */
@@ -753,7 +754,7 @@ handle_event(Display *dpy, Window win, XEvent *event)
 static void
 event_loop(Display *dpy, Window win)
 {
-   while (1) {
+   while (frames < 0 || frames--) {
       int op;
       while (!animate || XPending(dpy) > 0) {
          XEvent event;
@@ -777,6 +778,7 @@ usage(void)
    printf("  -display <displayname>  set the display to run on\n");
    printf("  -srgb                   run in sRGB mode\n");
    printf("  -stereo                 run in stereo mode\n");
+   printf("  -frames N               render N frames and exit\n");
    printf("  -samples N              run in multisample mode with at least"
           "N samples\n");
    printf("  -swapinterval N         set swap interval to N frames"
@@ -813,6 +815,10 @@ main(int argc, char *argv[])
       }
       else if (strcmp(argv[i], "-stereo") == 0) {
          stereo = GL_TRUE;
+      }
+      else if (i < argc - 1 && strcmp(argv[i], "-frames") == 0) {
+         frames = strtol(argv[i + 1], NULL, 10);
+         ++i;
       }
       else if (i < argc - 1 && strcmp(argv[i], "-samples") == 0) {
          samples = strtol(argv[i + 1], NULL, 10);
