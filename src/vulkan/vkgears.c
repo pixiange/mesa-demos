@@ -165,7 +165,7 @@ init_vk(const char *extension)
    vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, props);
    assert(props[0].queueFlags & VK_QUEUE_GRAPHICS_BIT);
 
-   vkCreateDevice(physical_device,
+   res = vkCreateDevice(physical_device,
       &(VkDeviceCreateInfo) {
          .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
          .queueCreateInfoCount = 1,
@@ -183,6 +183,9 @@ init_vk(const char *extension)
       },
       NULL,
       &device);
+
+   if (res != VK_SUCCESS)
+      error("Failed to create Vulkan device.\n");
 
    vkGetDeviceQueue2(device,
       &(VkDeviceQueueInfo2) {
