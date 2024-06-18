@@ -815,11 +815,11 @@ main(int argc, char *argv[])
          stereo = GL_TRUE;
       }
       else if (i < argc - 1 && strcmp(argv[i], "-samples") == 0) {
-         samples = strtod(argv[i + 1], NULL);
+         samples = strtol(argv[i + 1], NULL, 10);
          ++i;
       }
       else if (i < argc - 1 && strcmp(argv[i], "-swapinterval") == 0) {
-         swapinterval = strtod(argv[i + 1], NULL);
+         swapinterval = strtol(argv[i + 1], NULL, 10);
          ++i;
       }
       else if (strcmp(argv[i], "-fullscreen") == 0) {
