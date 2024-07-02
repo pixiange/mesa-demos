@@ -342,6 +342,9 @@ init_display(void)
 static void
 fini_display(void)
 {
+   if (display.seat.keyboard)
+      wl_keyboard_destroy(display.seat.keyboard);
+
    wl_seat_destroy(display.wl_seat);
    xkb_context_unref(display.seat.xkb_context);
    wl_compositor_destroy(display.compositor);
