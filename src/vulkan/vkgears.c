@@ -69,7 +69,7 @@ static VkSwapchainKHR swapchain;
 static VkImage color_msaa, depth_image;
 static VkImageView color_msaa_view, depth_view;
 static VkDeviceMemory color_msaa_memory, depth_memory;
-static VkSemaphore back_buffer_semaphore, present_semaphore;
+static VkSemaphore present_semaphore;
 
 struct {
    VkImage image;
@@ -81,6 +81,7 @@ struct {
 struct {
    VkFence fence;
    VkCommandBuffer cmd_buffer;
+   VkSemaphore semaphore;
 } frame_data[MAX_CONCURRENT_FRAMES];
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
@@ -651,14 +652,14 @@ create_swapchain()
             .commandBufferCount = 1,
          },
          &frame_data[i].cmd_buffer);
-   }
 
-   vkCreateSemaphore(device,
-      &(VkSemaphoreCreateInfo) {
-         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-      },
-      NULL,
-      &back_buffer_semaphore);
+      vkCreateSemaphore(device,
+         &(VkSemaphoreCreateInfo) {
+            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+         },
+         NULL,
+         &frame_data[i].semaphore);
+   }
 }
 
 static void
@@ -667,6 +668,7 @@ free_swapchain_data()
    for (uint32_t i = 0; i < MAX_CONCURRENT_FRAMES; i++) {
       vkFreeCommandBuffers(device, cmd_pool, 1, &frame_data[i].cmd_buffer);
       vkDestroyFence(device, frame_data[i].fence, NULL);
+      vkDestroySemaphore(device, frame_data[i].semaphore, NULL);
    }
 
    for (uint32_t i = 0; i < image_count; i++) {
@@ -683,8 +685,6 @@ free_swapchain_data()
       vkDestroyImage(device, color_msaa, NULL);
       vkFreeMemory(device, color_msaa_memory, NULL);
    }
-
-   vkDestroySemaphore(device, back_buffer_semaphore, NULL);
 }
 
 static void
@@ -1546,10 +1546,14 @@ main(int argc, char *argv[])
       }
 
       static uint32_t frame_index;
+      assert(frame_index < ARRAY_SIZE(frame_data));
+      vkWaitForFences(device, 1, &frame_data[frame_index].fence, VK_TRUE, UINT64_MAX);
+      vkResetFences(device, 1, &frame_data[frame_index].fence);
+
       uint32_t image_index;
       VkResult result =
          vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
-                               back_buffer_semaphore, VK_NULL_HANDLE,
+                               frame_data[frame_index].semaphore, VK_NULL_HANDLE,
                                &image_index);
       if (result == VK_SUBOPTIMAL_KHR ||
           width != new_width || height != new_height) {
@@ -1559,10 +1563,6 @@ main(int argc, char *argv[])
       assert(result == VK_SUCCESS);
 
       assert(image_index < ARRAY_SIZE(image_data));
-      assert(frame_index < ARRAY_SIZE(frame_data));
-
-      vkWaitForFences(device, 1, &frame_data[frame_index].fence, VK_TRUE, UINT64_MAX);
-      vkResetFences(device, 1, &frame_data[frame_index].fence);
 
       vkBeginCommandBuffer(frame_data[frame_index].cmd_buffer,
          &(VkCommandBufferBeginInfo) {
@@ -1623,7 +1623,7 @@ main(int argc, char *argv[])
          &(VkSubmitInfo) {
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
             .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &back_buffer_semaphore,
+            .pWaitSemaphores = &frame_data[frame_index].semaphore,
             .signalSemaphoreCount = 1,
             .pSignalSemaphores = &present_semaphore,
             .pWaitDstStageMask = (VkPipelineStageFlags []) {
