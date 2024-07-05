@@ -77,10 +77,11 @@ struct {
    VkFramebuffer framebuffer;
 } image_data[5];
 
+#define MAX_CONCURRENT_FRAMES 2
 struct {
    VkFence fence;
    VkCommandBuffer cmd_buffer;
-} frame_data[5];
+} frame_data[MAX_CONCURRENT_FRAMES];
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
@@ -631,7 +632,9 @@ create_swapchain()
          },
          NULL,
          &image_data[i].framebuffer);
+   }
 
+   for (uint32_t i = 0; i < MAX_CONCURRENT_FRAMES; ++i) {
       vkCreateFence(device,
          &(VkFenceCreateInfo) {
             .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
@@ -661,9 +664,12 @@ create_swapchain()
 static void
 free_swapchain_data()
 {
-   for (uint32_t i = 0; i < image_count; i++) {
+   for (uint32_t i = 0; i < MAX_CONCURRENT_FRAMES; i++) {
       vkFreeCommandBuffers(device, cmd_pool, 1, &frame_data[i].cmd_buffer);
       vkDestroyFence(device, frame_data[i].fence, NULL);
+   }
+
+   for (uint32_t i = 0; i < image_count; i++) {
       vkDestroyFramebuffer(device, image_data[i].framebuffer, NULL);
       vkDestroyImageView(device, image_data[i].view, NULL);
    }
@@ -1539,11 +1545,12 @@ main(int argc, char *argv[])
          break;
       }
 
-      uint32_t index;
+      static uint32_t frame_index;
+      uint32_t image_index;
       VkResult result =
          vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
                                back_buffer_semaphore, VK_NULL_HANDLE,
-                               &index);
+                               &image_index);
       if (result == VK_SUBOPTIMAL_KHR ||
           width != new_width || height != new_height) {
          recreate_swapchain();
@@ -1551,12 +1558,13 @@ main(int argc, char *argv[])
       }
       assert(result == VK_SUCCESS);
 
-      assert(index < ARRAY_SIZE(image_data));
+      assert(image_index < ARRAY_SIZE(image_data));
+      assert(frame_index < ARRAY_SIZE(frame_data));
 
-      vkWaitForFences(device, 1, &frame_data[index].fence, VK_TRUE, UINT64_MAX);
-      vkResetFences(device, 1, &frame_data[index].fence);
+      vkWaitForFences(device, 1, &frame_data[frame_index].fence, VK_TRUE, UINT64_MAX);
+      vkResetFences(device, 1, &frame_data[frame_index].fence);
 
-      vkBeginCommandBuffer(frame_data[index].cmd_buffer,
+      vkBeginCommandBuffer(frame_data[frame_index].cmd_buffer,
          &(VkCommandBufferBeginInfo) {
             .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
             .flags = 0
@@ -1568,15 +1576,15 @@ main(int argc, char *argv[])
       mat4_identity(ubo.projection);
       mat4_frustum_vk(ubo.projection, -1.0, 1.0, -h, +h, 5.0f, 60.0f);
 
-      buffer_barrier(frame_data[index].cmd_buffer,
+      buffer_barrier(frame_data[frame_index].cmd_buffer,
          VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
          VK_PIPELINE_STAGE_TRANSFER_BIT,
          0, 0,
          ubo_buffer, 0, sizeof(ubo));
 
-      vkCmdUpdateBuffer(frame_data[index].cmd_buffer, ubo_buffer, 0, sizeof(ubo), &ubo);
+      vkCmdUpdateBuffer(frame_data[frame_index].cmd_buffer, ubo_buffer, 0, sizeof(ubo), &ubo);
 
-      buffer_barrier(frame_data[index].cmd_buffer,
+      buffer_barrier(frame_data[frame_index].cmd_buffer,
          VK_PIPELINE_STAGE_TRANSFER_BIT,
          VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
          VK_ACCESS_TRANSFER_WRITE_BIT,
@@ -1591,11 +1599,11 @@ main(int argc, char *argv[])
       mat4_rotate(view, 2 * M_PI * view_rot[1] / 360.0, 0, 1, 0);
       mat4_rotate(view, 2 * M_PI * view_rot[2] / 360.0, 0, 0, 1);
 
-      vkCmdBeginRenderPass(frame_data[index].cmd_buffer,
+      vkCmdBeginRenderPass(frame_data[frame_index].cmd_buffer,
          &(VkRenderPassBeginInfo) {
             .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
             .renderPass = render_pass,
-            .framebuffer = image_data[index].framebuffer,
+            .framebuffer = image_data[image_index].framebuffer,
             .renderArea = { { 0, 0 }, { width, height } },
             .clearValueCount = attachment_count,
             .pClearValues = (VkClearValue []) {
@@ -1606,10 +1614,10 @@ main(int argc, char *argv[])
          },
          VK_SUBPASS_CONTENTS_INLINE);
 
-      draw_gears(frame_data[index].cmd_buffer, view);
+      draw_gears(frame_data[frame_index].cmd_buffer, view);
 
-      vkCmdEndRenderPass(frame_data[index].cmd_buffer);
-      vkEndCommandBuffer(frame_data[index].cmd_buffer);
+      vkCmdEndRenderPass(frame_data[frame_index].cmd_buffer);
+      vkEndCommandBuffer(frame_data[frame_index].cmd_buffer);
 
       vkQueueSubmit(queue, 1,
          &(VkSubmitInfo) {
@@ -1622,8 +1630,8 @@ main(int argc, char *argv[])
                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             },
             .commandBufferCount = 1,
-            .pCommandBuffers = &frame_data[index].cmd_buffer,
-         }, frame_data[index].fence);
+            .pCommandBuffers = &frame_data[frame_index].cmd_buffer,
+         }, frame_data[frame_index].fence);
 
       vkQueuePresentKHR(queue,
          &(VkPresentInfoKHR) {
@@ -1632,11 +1640,15 @@ main(int argc, char *argv[])
             .waitSemaphoreCount = 1,
             .swapchainCount = 1,
             .pSwapchains = (VkSwapchainKHR[]) { swapchain, },
-            .pImageIndices = (uint32_t[]) { index, },
+            .pImageIndices = (uint32_t[]) { image_index, },
             .pResults = &result,
          });
 
       frames++;
+
+      frame_index++;
+      if (frame_index == MAX_CONCURRENT_FRAMES)
+         frame_index = 0;
 
       if (tRate0 < 0.0)
          tRate0 = t;
