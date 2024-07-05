@@ -681,6 +681,7 @@ free_swapchain_data()
 static void
 recreate_swapchain()
 {
+   vkDeviceWaitIdle(device);
    free_swapchain_data();
    vkDestroySwapchainKHR(device, swap_chain, NULL);
    width = new_width, height = new_height;
@@ -1542,8 +1543,6 @@ main(int argc, char *argv[])
                                &index);
       if (result == VK_SUBOPTIMAL_KHR ||
           width != new_width || height != new_height) {
-         for (uint32_t i = 0; i < image_count; i++)
-            vkWaitForFences(device, 1, &swap_chain_data[i].fence, VK_TRUE, UINT64_MAX);
          recreate_swapchain();
          continue;
       }
