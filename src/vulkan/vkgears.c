@@ -51,7 +51,7 @@ static VkPhysicalDeviceMemoryProperties mem_props;
 static VkDevice device;
 static VkQueue queue;
 
-/* swap chain */
+/* swapchain */
 static int width, height, new_width, new_height;
 static bool fullscreen;
 static VkPresentModeKHR desidered_present_mode;
@@ -65,7 +65,7 @@ static VkColorSpaceKHR color_space;
 static VkFormat depth_format;
 uint32_t min_image_count = 2;
 static VkSurfaceKHR surface;
-static VkSwapchainKHR swap_chain;
+static VkSwapchainKHR swapchain;
 static VkImage color_msaa, depth_image;
 static VkImageView color_msaa_view, depth_view;
 static VkDeviceMemory color_msaa_memory, depth_memory;
@@ -512,14 +512,14 @@ create_swapchain()
          .preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
          .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
          .presentMode = present_mode,
-      }, NULL, &swap_chain);
+      }, NULL, &swapchain);
 
-   vkGetSwapchainImagesKHR(device, swap_chain,
+   vkGetSwapchainImagesKHR(device, swapchain,
                            &image_count, NULL);
    assert(image_count > 0);
-   VkImage swap_chain_images[image_count];
-   vkGetSwapchainImagesKHR(device, swap_chain,
-                           &image_count, swap_chain_images);
+   VkImage swapchain_images[image_count];
+   vkGetSwapchainImagesKHR(device, swapchain,
+                           &image_count, swapchain_images);
 
 
    int res;
@@ -591,11 +591,11 @@ create_swapchain()
    int attachment_count = sample_count != VK_SAMPLE_COUNT_1_BIT ? 3 : 2;
 
    for (uint32_t i = 0; i < image_count; i++) {
-      image_data[i].image = swap_chain_images[i];
+      image_data[i].image = swapchain_images[i];
       vkCreateImageView(device,
          &(VkImageViewCreateInfo) {
             .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .image = swap_chain_images[i],
+            .image = swapchain_images[i],
             .viewType = VK_IMAGE_VIEW_TYPE_2D,
             .format = image_format,
             .components = {
@@ -686,7 +686,7 @@ recreate_swapchain()
 {
    vkDeviceWaitIdle(device);
    free_swapchain_data();
-   vkDestroySwapchainKHR(device, swap_chain, NULL);
+   vkDestroySwapchainKHR(device, swapchain, NULL);
    width = new_width, height = new_height;
    create_swapchain();
 }
@@ -1541,7 +1541,7 @@ main(int argc, char *argv[])
 
       uint32_t index;
       VkResult result =
-         vkAcquireNextImageKHR(device, swap_chain, UINT64_MAX,
+         vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
                                back_buffer_semaphore, VK_NULL_HANDLE,
                                &index);
       if (result == VK_SUBOPTIMAL_KHR ||
@@ -1631,7 +1631,7 @@ main(int argc, char *argv[])
             .pWaitSemaphores = &present_semaphore,
             .waitSemaphoreCount = 1,
             .swapchainCount = 1,
-            .pSwapchains = (VkSwapchainKHR[]) { swap_chain, },
+            .pSwapchains = (VkSwapchainKHR[]) { swapchain, },
             .pImageIndices = (uint32_t[]) { index, },
             .pResults = &result,
          });
