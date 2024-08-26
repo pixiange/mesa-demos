@@ -1472,20 +1472,24 @@ main(int argc, char *argv[])
       }
       else if (strcmp(argv[i], "-samples") == 0 && i + 1 < argc) {
          i++;
-         sample_count = sample_count_flag(atoi(argv[i]));
+         sample_count = sample_count_flag(strtol(argv[i], NULL, 10));
       }
       else if (strcmp(argv[i], "-present-mailbox") == 0) {
          desidered_present_mode = VK_PRESENT_MODE_MAILBOX_KHR;
       }
       else if (strcmp(argv[i], "-size") == 0 && i + 1 < argc) {
          i++;
-         char * token;
+         char *token;
          token = strtok(argv[i], "x");
          if (!token)
             continue;
-         width = atoi(token);
-         if((token = strtok(NULL, "x"))) {
-            height = atoi(token);
+         long tmp = strtol(token, NULL, 10);
+         if (tmp > 0)
+            width = tmp;
+         if ((token = strtok(NULL, "x"))) {
+            tmp = strtol(token, NULL, 10);
+            if (tmp > 0)
+               height = tmp;
          }
       }
       else if (strcmp(argv[i], "-fullscreen") == 0) {
