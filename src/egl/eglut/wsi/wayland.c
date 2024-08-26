@@ -466,6 +466,8 @@ init_window(struct eglut_window *win, const char *title,
    libdecor_frame_set_app_id(window.frame, title);
    libdecor_frame_set_title(window.frame, title);
    libdecor_frame_map(window.frame);
+
+   libdecor_frame_set_min_content_size(window.frame, 1, 1);
 }
 
 static void
