@@ -357,6 +357,8 @@ static void init_window(const char *title, int width, int height, bool fullscree
    libdecor_frame_set_title(frame, title);
    libdecor_frame_map(frame);
 
+   libdecor_frame_set_min_content_size(frame, 1, 1);
+
    wl_surface_commit(surface);
 
    while (!configured) {
