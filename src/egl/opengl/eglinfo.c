@@ -240,8 +240,11 @@ PrintConfigsVerbose(unsigned num_configs, struct eglconfig_info *info)
 
       printf("\n\tEGL_NATIVE_VISUAL_ID: %x", info[i].vid);
       printf("    EGL_NATIVE_VISUAL_TYPE: %x", info[i].vtype);
-      printf("    EGL_CONFIG_CAVEAT: %s", info[i].caveat == EGL_NONE ?
-                                          "true" : "false");
+      printf("    EGL_CONFIG_CAVEAT: %s",
+             info[i].caveat == EGL_NONE ? "none" :
+             info[i].caveat == EGL_SLOW_CONFIG ? "slow" : 
+             info[i].caveat == EGL_NON_CONFORMANT_CONFIG ? "non-conformant" :
+             "(unknown)");
       printf("\n\tEGL_BIND_TO_TEXTURE: %s", info[i].bind_rgb ? "rgb" :
                                             info[i].bind_rgba ? "rgba" :
                                             "no");
