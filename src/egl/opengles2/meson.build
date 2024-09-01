@@ -31,7 +31,7 @@ executable(
 )
 executable(
   'es2tri', files('es2tri.c'),
-  dependencies: [_deps_x11, idep_util],
+  dependencies: [dep_gles2, idep_eglut, idep_util],
   install: true
 )
 executable(
