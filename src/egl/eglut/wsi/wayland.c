@@ -423,9 +423,8 @@ frame_close(struct libdecor_frame *frame, void *user_data)
 static void
 frame_commit(struct libdecor_frame *frame, void *user_data)
 {
-   struct eglut_window *window = user_data;
-
-   eglSwapBuffers(_eglut->dpy, window->surface);
+   /* struct eglut_window *window = user_data; */
+   _eglut->redisplay = true;
 }
 
 
