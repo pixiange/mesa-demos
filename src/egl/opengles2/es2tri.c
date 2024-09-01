@@ -70,7 +70,8 @@ draw(void)
 
    /* Set modelview/projection matrix */
    mat4_identity(mat);
-   mat4_rotate(mat, view_rotx * (M_PI / 180.0), 0, 0, 1);
+   mat4_rotate(mat, view_rotx * (M_PI / 180.0), 1, 0, 0);
+   mat4_rotate(mat, view_roty * (M_PI / 180.0), 0, 1, 0);
    mat4_scale(mat, 0.5, 0.5, 0.5);
    glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mat);
 
