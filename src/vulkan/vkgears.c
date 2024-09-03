@@ -132,13 +132,21 @@ current_time(void)
 static void
 init_vk(const char *extension)
 {
-   VkResult res = vkCreateInstance(
+   uint32_t api_version = VK_API_VERSION_1_0;
+
+   // use Vulkan 1.1 if supported
+   uint32_t instance_version = api_version;
+   VkResult res = vkEnumerateInstanceVersion(&instance_version);
+   if (res == VK_SUCCESS && instance_version >= VK_API_VERSION_1_1)
+      api_version = VK_API_VERSION_1_1;
+
+   res = vkCreateInstance(
       &(VkInstanceCreateInfo) {
          .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
          .pApplicationInfo = &(VkApplicationInfo) {
             .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
             .pApplicationName = "vkgears",
-            .apiVersion = VK_MAKE_VERSION(1, 1, 0),
+            .apiVersion = api_version,
          },
          .enabledExtensionCount = extension ? 2 : 0,
          .ppEnabledExtensionNames = (const char *[2]) {
@@ -192,14 +200,7 @@ init_vk(const char *extension)
    if (res != VK_SUCCESS)
       error("Failed to create Vulkan device.\n");
 
-   vkGetDeviceQueue2(device,
-      &(VkDeviceQueueInfo2) {
-         .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
-         .flags = 0,
-         .queueFamilyIndex = 0,
-         .queueIndex = 0,
-      },
-      &queue);
+   vkGetDeviceQueue(device, 0, 0, &queue);
 
    vkCreateCommandPool(device,
       &(const VkCommandPoolCreateInfo) {
