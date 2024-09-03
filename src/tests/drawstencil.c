@@ -21,91 +21,6 @@ static GLubyte Image[HEIGHT][WIDTH];
 
 
 static void
-DrawStencilPixels(GLint x, GLint y, GLsizei w, GLsizei h,
-                  const GLubyte *stencil)
-{
-   /* This program is run eight times, once for each stencil bit.
-    * The stencil values to draw are found in an 8-bit alpha texture.
-    * We read the texture/stencil value and test if bit 'b' is set.
-    * If the bit is set, result.A will be non-zero.  Finally, use
-    * alpha test and stencil test to update the stencil buffer.
-    *
-    * The basic algorithm for checking if a bit is set is:
-    *   if (is_odd(value / (1 << bit)))
-    *      result is one (or non-zero).
-    *   else
-    *      result is zero.
-    * The program parameter contains two values:
-    *   parm.x = 255 / (1 << bit)
-    *   parm.y = 0.5
-    */
-   static const char *program =
-      "!!ARBfp1.0\n"
-      "PARAM parm = program.local[0]; \n"
-      "TEMP t; \n"
-      "TEX t, fragment.texcoord[0], texture[0], RECT; \n"
-      "# t = t * 255 / bit \n"
-      "MUL t.x, t.a, parm.x; \n"
-      "# t = (int) t \n"
-      "FRC t.y, t.x; \n"
-      "SUB t.x, t.x, t.y; \n"
-      "# t = 5 * 0.5 \n"
-      "MUL t.x, t.x, parm.y; \n"
-      "# alpha = frac(t) \n"
-      "FRC result.color, t.x; \n"
-      "END \n";
-   GLuint prog;
-   GLint bit;
-
-   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-   glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_ALPHA, w, h, 0,
-                GL_ALPHA, GL_UNSIGNED_BYTE, stencil);
-   glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-   glGenProgramsARB(1, &prog);
-   glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, prog);
-   glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB,
-                      strlen(program), (const GLubyte *) program);
-   glEnable(GL_FRAGMENT_PROGRAM_ARB);
-
-   glPushMatrix();
-   glTranslatef(x, y, 0);
-
-   glEnable(GL_ALPHA_TEST);
-   glAlphaFunc(GL_GREATER, 0.0);
-
-   glEnable(GL_STENCIL_TEST);
-   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-   for (bit = 0; bit < 8; bit++) {
-      GLuint mask = 1 << bit;
-      glStencilFunc(GL_ALWAYS, 255/*mask*/, mask);
-      glStencilMask(mask);
-
-      glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 0,
-                                   // 1.0 / bit, 0.5, 0.0, 0.0);
-                                   255.0 / mask, 0.5, 0.0, 0.0);
-
-
-      glBegin(GL_TRIANGLE_FAN);
-      glTexCoord2f(0, 0);  glVertex2f(0, 0);
-      glTexCoord2f(w, 0);  glVertex2f(w, 0);
-      glTexCoord2f(w, h);  glVertex2f(w, h);
-      glTexCoord2f(0, h);  glVertex2f(0, h);
-      glEnd();
-   }
-
-   glPopMatrix();
-
-   glDisable(GL_FRAGMENT_PROGRAM_ARB);
-   glDisable(GL_ALPHA_TEST);
-   glDisable(GL_STENCIL_TEST);
-}
-
-
-
-static void
 Draw(void)
 {
    GLint x0 = 5, y0= 5, x1 = 10 + WIDTH, y1 = 5;
@@ -115,13 +30,9 @@ Draw(void)
    glClearColor(0.2, 0.2, 0.8, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-   if (0) {
-      DrawStencilPixels(x0, y0, WIDTH, HEIGHT, (GLubyte*) Image);
-   } else {
-      glWindowPos2i(x0, y0);
-      glDrawPixels(WIDTH, HEIGHT, GL_STENCIL_INDEX,
-                   GL_UNSIGNED_BYTE, (GLubyte*) Image);
-   }
+   glWindowPos2i(x0, y0);
+   glDrawPixels(WIDTH, HEIGHT, GL_STENCIL_INDEX,
+                GL_UNSIGNED_BYTE, (GLubyte*) Image);
 
    glReadPixels(x0, y0, WIDTH, HEIGHT, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, tmp);
 

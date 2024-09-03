@@ -134,8 +134,6 @@ progs = [
   'tri-flat',
   'tri-flat-clip',
   'tri-fog',
-  'tri-fp',
-  'tri-fp-const-imm',
   'tri-lit',
   'tri-lit-material',
   'tri-logicop-none',

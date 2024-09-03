@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 progs = [
-  'arbfplight',
   'arbfslight',
   'arbocclude',
   'arbocclude2',

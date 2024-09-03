@@ -31,9 +31,7 @@ if dep_glut.found()
   subdir('objviewer')
 
   subdir('glsl')
-  subdir('fp')
   subdir('fpglsl')
-  subdir('vp')
   subdir('vpglsl')
   subdir('tools')
 endif
