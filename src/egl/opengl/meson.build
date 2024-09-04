@@ -44,7 +44,7 @@ executable(
 )
 executable(
   'xeglthreads', files('xeglthreads.c'),
-  dependencies: [_deps, dep_x11],
+  dependencies: [_deps, dep_egl, dep_x11],
   install: true
 )
 

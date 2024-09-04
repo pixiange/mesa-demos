@@ -47,8 +47,6 @@
  */
 
 
-#if defined(PTHREADS)   /* defined by Mesa on Linux and other platforms */
-
 #include <assert.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -757,19 +755,3 @@ main(int argc, char *argv[])
 
    return 0;
 }
-
-
-#else /* PTHREADS */
-
-
-#include <stdio.h>
-
-int
-main(int argc, char *argv[])
-{
-   printf("Sorry, this program wasn't compiled with PTHREADS defined.\n");
-   return 0;
-}
-
-
-#endif /* PTHREADS */
