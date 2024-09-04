@@ -33,6 +33,18 @@ mat4_multiply(float *m, const float *n)
 }
 
 void
+mat4_scale(float *m, float x, float y, float z)
+{
+   float s[16] = {
+      x, 0, 0, 0,
+      0, y, 0, 0,
+      0, 0, z, 0,
+      0, 0, 0, 1
+   };
+   mat4_multiply(m, s);
+}
+
+void
 mat4_rotate(float *m, float angle, float x, float y, float z)
 {
    double s, c;

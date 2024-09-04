@@ -13,6 +13,17 @@ void
 mat4_multiply(float *m, const float *n);
 
 /**
+ * Scales a 4x4 matrix.
+ *
+ * @param[in,out] m the matrix to scale
+ * @param x the scale-factor for the x-axis
+ * @param y the scale-factor for the y-axis
+ * @param z the scale-factor for the z-axis
+ */
+void
+mat4_scale(float *m, float x, float y, float z);
+
+/**
  * Rotates a 4x4 matrix.
  *
  * @param[in,out] m the matrix to rotate
