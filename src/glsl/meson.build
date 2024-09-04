@@ -20,7 +20,6 @@
 
 progs = [
   'array',
-  'bezier',
   'bitmap',
   'brick',
   'bump',
@@ -29,11 +28,7 @@ progs = [
   'deriv',
   'fragcoord',
   'fsraytrace',
-  'geom-outlining-130',
   'geom-outlining-150',
-  'geom-sprites',
-  'geom-stipple-lines',
-  'geom-wide-lines',
   'identity',
   'linktest',
   'mandelbrot',
@@ -85,7 +80,6 @@ executable(
 )
 
 glsl_data = [
-  'bezier.geom',
   'blinking-teapot.frag',
   'blinking-teapot.vert',
   'brick.shtest',
