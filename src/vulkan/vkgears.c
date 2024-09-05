@@ -1314,6 +1314,7 @@ usage(void)
    printf("Usage:\n");
    printf("  -samples N              run in multisample mode with N samples\n");
    printf("  -present-mailbox        run with present mode mailbox\n");
+   printf("  -present-immediate      run with present mode immediate\n");
    printf("  -fullscreen             run in fullscreen mode\n");
    printf("  -info                   display Vulkan device info\n");
    printf("  -size WxH               window size\n");
@@ -1476,6 +1477,9 @@ main(int argc, char *argv[])
       }
       else if (strcmp(argv[i], "-present-mailbox") == 0) {
          desidered_present_mode = VK_PRESENT_MODE_MAILBOX_KHR;
+      }
+      else if (strcmp(argv[i], "-present-immediate") == 0) {
+         desidered_present_mode = VK_PRESENT_MODE_IMMEDIATE_KHR;
       }
       else if (strcmp(argv[i], "-size") == 0 && i + 1 < argc) {
          i++;
