@@ -40,7 +40,17 @@ if dep_xcb.found()
   wsi_deps += dep_xcb
 endif
 
-if (dep_wayland.found() or dep_xcb.found()) and prog_glslang.found()
+is_macos = host_machine.system() == 'darwin'
+if is_macos
+  args += ['-DMETAL_SUPPORT']
+  sources += files('wsi/metal.m')
+  wsi_deps += dependency(
+    'appleframeworks',
+    modules : ['AppKit', 'QuartzCore', 'Metal']
+  )
+endif
+
+if (dep_wayland.found() or dep_xcb.found() or is_macos) and prog_glslang.found()
   _gen = generator(
     prog_glslang,
     output : '@PLAINNAME@.spv.h',
@@ -54,6 +64,7 @@ if (dep_wayland.found() or dep_xcb.found()) and prog_glslang.found()
     spirv_shaders,
     dependencies: [dep_vulkan, idep_util, wsi_deps],
     c_args: args,
+    objc_args: args,
     install: true
   )
 endif

@@ -37,6 +37,11 @@ struct wsi_interface
 xcb_wsi_interface(void);
 #endif
 
+#ifdef METAL_SUPPORT
+struct wsi_interface
+metal_wsi_interface(void);
+#endif
+
 struct wsi_interface
 get_wsi_interface(void);
 

@@ -23,6 +23,11 @@ project('mesa-demos', 'c', 'cpp',
   meson_version : '>= 0.60',
   default_options: ['c_std=c11', 'cpp_std=c++17'])
 
+if host_machine.system() == 'darwin'
+  add_languages('objc', native : false)
+  add_global_arguments('-fobjc-arc', language : 'objc')
+endif
+
 cc = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
