@@ -370,7 +370,7 @@ PrintContextExtensions(const char *api_name, EGLBoolean single_line)
 
    const char *extensions;
 
-   if (glGetStringi) {
+   if (GLAD_GL_VERSION_3_0) {
       struct ext_functions funcs = {
          .GetStringi = glGetStringi,
       };
