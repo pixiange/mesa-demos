@@ -456,88 +456,11 @@ print_limits(const char *extensions, const char *oglstring, int version,
       { 1, GL_MAX_TEXTURE_STACK_DEPTH, "GL_MAX_TEXTURE_STACK_DEPTH", NULL },
       { 1, GL_MAX_TEXTURE_SIZE, "GL_MAX_TEXTURE_SIZE", NULL },
       { 1, GL_MAX_3D_TEXTURE_SIZE, "GL_MAX_3D_TEXTURE_SIZE", NULL },
-#if defined(GL_EXT_texture_array)
-      { 1, GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, "GL_MAX_ARRAY_TEXTURE_LAYERS", "GL_EXT_texture_array" },
-#endif
       { 2, GL_MAX_VIEWPORT_DIMS, "GL_MAX_VIEWPORT_DIMS", NULL },
       { 2, GL_ALIASED_LINE_WIDTH_RANGE, "GL_ALIASED_LINE_WIDTH_RANGE", NULL },
       { 2, GL_SMOOTH_LINE_WIDTH_RANGE, "GL_SMOOTH_LINE_WIDTH_RANGE", NULL },
       { 2, GL_ALIASED_POINT_SIZE_RANGE, "GL_ALIASED_POINT_SIZE_RANGE", NULL },
       { 2, GL_SMOOTH_POINT_SIZE_RANGE, "GL_SMOOTH_POINT_SIZE_RANGE", NULL },
-#if defined(GL_ARB_texture_cube_map)
-      { 1, GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, "GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB", "GL_ARB_texture_cube_map" },
-#endif
-#if defined(GL_NV_texture_rectangle)
-      { 1, GL_MAX_RECTANGLE_TEXTURE_SIZE_NV, "GL_MAX_RECTANGLE_TEXTURE_SIZE_NV", "GL_NV_texture_rectangle" },
-#endif
-#if defined(GL_ARB_multitexture)
-      { 1, GL_MAX_TEXTURE_UNITS_ARB, "GL_MAX_TEXTURE_UNITS_ARB", "GL_ARB_multitexture" },
-#endif
-#if defined(GL_EXT_texture_lod_bias)
-      { 1, GL_MAX_TEXTURE_LOD_BIAS_EXT, "GL_MAX_TEXTURE_LOD_BIAS_EXT", "GL_EXT_texture_lod_bias" },
-#endif
-#if defined(GL_EXT_texture_filter_anisotropic)
-      { 1, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, "GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT", "GL_EXT_texture_filter_anisotropic" },
-#endif
-#if defined(GL_ARB_draw_buffers)
-      { 1, GL_MAX_DRAW_BUFFERS_ARB, "GL_MAX_DRAW_BUFFERS_ARB", "GL_ARB_draw_buffers" },
-#endif
-#if defined(GL_ARB_blend_func_extended)
-      { 1, GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS", "GL_ARB_blend_func_extended" },
-#endif
-#if defined (GL_ARB_framebuffer_object)
-      { 1, GL_MAX_RENDERBUFFER_SIZE, "GL_MAX_RENDERBUFFER_SIZE", "GL_ARB_framebuffer_object" },
-      { 1, GL_MAX_COLOR_ATTACHMENTS, "GL_MAX_COLOR_ATTACHMENTS", "GL_ARB_framebuffer_object" },
-      { 1, GL_MAX_SAMPLES, "GL_MAX_SAMPLES", "GL_ARB_framebuffer_object" },
-#endif
-#if defined (GL_EXT_transform_feedback)
-     { 1, GL_MAX_TRANSFORM_FEEDBACK_BUFFERS, "GL_MAX_TRANSFORM_FEEDBACK_BUFFERS", "GL_EXT_transform_feedback" },
-     { 1, GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_EXT, "GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS", "GL_EXT_transform_feedback" },
-     { 1, GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_EXT, "GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS", "GL_EXT_transform_feedback", },
-     { 1, GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_EXT, "GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS", "GL_EXT_transform_feedback" },
-#endif
-#if defined (GL_ARB_texture_buffer_object)
-      { 1, GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, "GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT", "GL_ARB_texture_buffer_object" },
-      { 1, GL_MAX_TEXTURE_BUFFER_SIZE, "GL_MAX_TEXTURE_BUFFER_SIZE", "GL_ARB_texture_buffer_object" },
-#endif
-#if defined (GL_ARB_texture_multisample)
-      { 1, GL_MAX_COLOR_TEXTURE_SAMPLES, "GL_MAX_COLOR_TEXTURE_SAMPLES", "GL_ARB_texture_multisample" },
-      { 1, GL_MAX_DEPTH_TEXTURE_SAMPLES, "GL_MAX_DEPTH_TEXTURE_SAMPLES", "GL_ARB_texture_multisample" },
-      { 1, GL_MAX_INTEGER_SAMPLES, "GL_MAX_INTEGER_SAMPLES", "GL_ARB_texture_multisample" },
-#endif
-#if defined (GL_ARB_uniform_buffer_object)
-      { 1, GL_MAX_VERTEX_UNIFORM_BLOCKS, "GL_MAX_VERTEX_UNIFORM_BLOCKS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_FRAGMENT_UNIFORM_BLOCKS, "GL_MAX_FRAGMENT_UNIFORM_BLOCKS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_GEOMETRY_UNIFORM_BLOCKS, "GL_MAX_GEOMETRY_UNIFORM_BLOCKS" , "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_COMBINED_UNIFORM_BLOCKS, "GL_MAX_COMBINED_UNIFORM_BLOCKS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_UNIFORM_BUFFER_BINDINGS, "GL_MAX_UNIFORM_BUFFER_BINDINGS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_UNIFORM_BLOCK_SIZE, "GL_MAX_UNIFORM_BLOCK_SIZE", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS", "GL_ARB_uniform_buffer_object" },
-      { 1, GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, "GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT", "GL_ARB_uniform_buffer_object" },
-#endif
-#if defined (GL_ARB_vertex_attrib_binding)
-      { 1, GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, "GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET", "GL_ARB_vertex_attrib_binding" },
-      { 1, GL_MAX_VERTEX_ATTRIB_BINDINGS, "GL_MAX_VERTEX_ATTRIB_BINDINGS", "GL_ARB_vertex_attrib_binding" },
-#endif
-#if defined(GL_ARB_tessellation_shader)
-      { 1, GL_MAX_TESS_GEN_LEVEL, "GL_MAX_TESS_GEN_LEVEL", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_PATCH_COMPONENTS, "GL_MAX_TESS_PATCH_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS, "GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS, "GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS, "GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_CONTROL_INPUT_COMPONENTS, "GL_MAX_TESS_CONTROL_INPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS, "GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS, "GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS, "GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS, "GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS, "GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS, "GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS, "GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
-      { 1, GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
-#endif
 #if defined(GL_VERSION_2_0)
       { 1, GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, "GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS", "2.0" },
       { 1, GL_MAX_DRAW_BUFFERS, "GL_MAX_DRAW_BUFFERS", "2.0" },
@@ -661,6 +584,83 @@ print_limits(const char *extensions, const char *oglstring, int version,
 #endif
 #if defined(GL_VERSION_4_6)
       { 1, GL_MAX_TEXTURE_MAX_ANISOTROPY, "GL_MAX_TEXTURE_MAX_ANISOTROPY", "4.6" },
+#endif
+#if defined(GL_EXT_texture_array)
+      { 1, GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, "GL_MAX_ARRAY_TEXTURE_LAYERS", "GL_EXT_texture_array" },
+#endif
+#if defined(GL_ARB_texture_cube_map)
+      { 1, GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, "GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB", "GL_ARB_texture_cube_map" },
+#endif
+#if defined(GL_NV_texture_rectangle)
+      { 1, GL_MAX_RECTANGLE_TEXTURE_SIZE_NV, "GL_MAX_RECTANGLE_TEXTURE_SIZE_NV", "GL_NV_texture_rectangle" },
+#endif
+#if defined(GL_ARB_multitexture)
+      { 1, GL_MAX_TEXTURE_UNITS_ARB, "GL_MAX_TEXTURE_UNITS_ARB", "GL_ARB_multitexture" },
+#endif
+#if defined(GL_EXT_texture_lod_bias)
+      { 1, GL_MAX_TEXTURE_LOD_BIAS_EXT, "GL_MAX_TEXTURE_LOD_BIAS_EXT", "GL_EXT_texture_lod_bias" },
+#endif
+#if defined(GL_EXT_texture_filter_anisotropic)
+      { 1, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, "GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT", "GL_EXT_texture_filter_anisotropic" },
+#endif
+#if defined(GL_ARB_draw_buffers)
+      { 1, GL_MAX_DRAW_BUFFERS_ARB, "GL_MAX_DRAW_BUFFERS_ARB", "GL_ARB_draw_buffers" },
+#endif
+#if defined(GL_ARB_blend_func_extended)
+      { 1, GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS", "GL_ARB_blend_func_extended" },
+#endif
+#if defined (GL_ARB_framebuffer_object)
+      { 1, GL_MAX_RENDERBUFFER_SIZE, "GL_MAX_RENDERBUFFER_SIZE", "GL_ARB_framebuffer_object" },
+      { 1, GL_MAX_COLOR_ATTACHMENTS, "GL_MAX_COLOR_ATTACHMENTS", "GL_ARB_framebuffer_object" },
+      { 1, GL_MAX_SAMPLES, "GL_MAX_SAMPLES", "GL_ARB_framebuffer_object" },
+#endif
+#if defined (GL_EXT_transform_feedback)
+     { 1, GL_MAX_TRANSFORM_FEEDBACK_BUFFERS, "GL_MAX_TRANSFORM_FEEDBACK_BUFFERS", "GL_EXT_transform_feedback" },
+     { 1, GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_EXT, "GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS", "GL_EXT_transform_feedback" },
+     { 1, GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_EXT, "GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS", "GL_EXT_transform_feedback", },
+     { 1, GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_EXT, "GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS", "GL_EXT_transform_feedback" },
+#endif
+#if defined (GL_ARB_texture_buffer_object)
+      { 1, GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, "GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT", "GL_ARB_texture_buffer_object" },
+      { 1, GL_MAX_TEXTURE_BUFFER_SIZE, "GL_MAX_TEXTURE_BUFFER_SIZE", "GL_ARB_texture_buffer_object" },
+#endif
+#if defined (GL_ARB_texture_multisample)
+      { 1, GL_MAX_COLOR_TEXTURE_SAMPLES, "GL_MAX_COLOR_TEXTURE_SAMPLES", "GL_ARB_texture_multisample" },
+      { 1, GL_MAX_DEPTH_TEXTURE_SAMPLES, "GL_MAX_DEPTH_TEXTURE_SAMPLES", "GL_ARB_texture_multisample" },
+      { 1, GL_MAX_INTEGER_SAMPLES, "GL_MAX_INTEGER_SAMPLES", "GL_ARB_texture_multisample" },
+#endif
+#if defined (GL_ARB_uniform_buffer_object)
+      { 1, GL_MAX_VERTEX_UNIFORM_BLOCKS, "GL_MAX_VERTEX_UNIFORM_BLOCKS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_FRAGMENT_UNIFORM_BLOCKS, "GL_MAX_FRAGMENT_UNIFORM_BLOCKS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_GEOMETRY_UNIFORM_BLOCKS, "GL_MAX_GEOMETRY_UNIFORM_BLOCKS" , "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_COMBINED_UNIFORM_BLOCKS, "GL_MAX_COMBINED_UNIFORM_BLOCKS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_UNIFORM_BUFFER_BINDINGS, "GL_MAX_UNIFORM_BUFFER_BINDINGS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_UNIFORM_BLOCK_SIZE, "GL_MAX_UNIFORM_BLOCK_SIZE", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS", "GL_ARB_uniform_buffer_object" },
+      { 1, GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, "GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT", "GL_ARB_uniform_buffer_object" },
+#endif
+#if defined (GL_ARB_vertex_attrib_binding)
+      { 1, GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, "GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET", "GL_ARB_vertex_attrib_binding" },
+      { 1, GL_MAX_VERTEX_ATTRIB_BINDINGS, "GL_MAX_VERTEX_ATTRIB_BINDINGS", "GL_ARB_vertex_attrib_binding" },
+#endif
+#if defined(GL_ARB_tessellation_shader)
+      { 1, GL_MAX_TESS_GEN_LEVEL, "GL_MAX_TESS_GEN_LEVEL", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_PATCH_COMPONENTS, "GL_MAX_TESS_PATCH_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS, "GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS, "GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS, "GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_CONTROL_INPUT_COMPONENTS, "GL_MAX_TESS_CONTROL_INPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS, "GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS, "GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS, "GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS, "GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS, "GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS, "GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS, "GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS", "GL_ARB_tessellation_shader" },
+      { 1, GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS", "GL_ARB_tessellation_shader" },
 #endif
 #if defined(GL_ARB_transform_feedback3)
       { 1, GL_MAX_TRANSFORM_FEEDBACK_BUFFERS, "GL_MAX_TRANSFORM_FEEDBACK_BUFFERS", "GL_ARB_transform_feedback3" },
