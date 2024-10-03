@@ -86,6 +86,6 @@ const char *
 context_flags_string(int mask);
 
 void
-print_gpu_memory_info(const char *glExtensions);
+print_gpu_memory_info(void);
 
 #endif /* GLINFO_COMMON_H */

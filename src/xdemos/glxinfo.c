@@ -561,7 +561,7 @@ print_screen_info(Display *dpy, int scrnum,
          }
          if (strstr(glxExtensions, "GLX_MESA_query_renderer"))
             query_renderer();
-         print_gpu_memory_info(glExtensions);
+         print_gpu_memory_info();
          printf("OpenGL vendor string: %s\n", glVendor);
          printf("OpenGL renderer string: %s\n", glRenderer);
       }

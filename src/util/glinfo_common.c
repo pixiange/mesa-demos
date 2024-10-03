@@ -821,7 +821,6 @@ context_flags_string(int mask)
 static void
 query_ATI_meminfo(void)
 {
-#ifdef GL_ATI_meminfo
     int i[4];
 
     printf("Memory info (GL_ATI_meminfo):\n");
@@ -843,13 +842,11 @@ query_ATI_meminfo(void)
            i[0] / 1024, i[1] / 1024);
     printf("    Renderbuffer free aux. memory - total: %u MB, largest block: %u MB\n",
            i[2] / 1024, i[3] / 1024);
-#endif
 }
 
 static void
 query_NVX_gpu_memory_info(void)
 {
-#ifdef GL_NVX_gpu_memory_info
     int i;
 
     printf("Memory info (GL_NVX_gpu_memory_info):\n");
@@ -862,14 +859,13 @@ query_NVX_gpu_memory_info(void)
 
     glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &i);
     printf("    Currently available dedicated video memory: %u MB\n", i / 1024);
-#endif
 }
 
 void
-print_gpu_memory_info(const char *glExtensions)
+print_gpu_memory_info(void)
 {
-   if (strstr(glExtensions, "GL_ATI_meminfo"))
+   if (GLAD_GL_ATI_meminfo)
       query_ATI_meminfo();
-   if (strstr(glExtensions, "GL_NVX_gpu_memory_info"))
+   if (GLAD_GL_NVX_gpu_memory_info)
       query_NVX_gpu_memory_info();
 }

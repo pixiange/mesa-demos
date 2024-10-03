@@ -514,7 +514,7 @@ doOneContext(EGLDisplay d,
       if (!extensions)
          return 1;
 
-      print_gpu_memory_info(extensions);
+      print_gpu_memory_info();
 
       if (opts.limits) {
          struct ext_functions funcs = {
