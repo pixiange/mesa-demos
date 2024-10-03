@@ -501,9 +501,6 @@ doOneContext(EGLDisplay d,
              int version,
              struct options opts)
 {
-   if (!glGetString || !glGetIntegerv)
-      return 1;
-
    printf("%s vendor: %s\n", api_name, glGetString(GL_VENDOR));
    printf("%s renderer: %s\n", api_name, glGetString(GL_RENDERER));
    printf("%s version: %s\n", api_name, glGetString(GL_VERSION));
