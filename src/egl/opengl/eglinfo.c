@@ -413,8 +413,7 @@ chooseEGLConfig(EGLDisplay d, int api_bitmask)
 static EGLContext
 createEGLContext(EGLDisplay d, EGLConfig conf, int api,
                  EGLBoolean khr_create_context,
-                 EGLBoolean core_profile,
-                 int *context_version)
+                 EGLBoolean core_profile)
 {
    EGLContext ctx;
 
@@ -455,13 +454,9 @@ createEGLContext(EGLDisplay d, EGLConfig conf, int api,
                continue;
             }
             gladLoadGL((GLADloadfunc) eglGetProcAddress);
-            *context_version =
-               gl_versions[i].major * 10 + gl_versions[i].minor;
             return ctx;
          }
       }
-      /* couldn't get core profile context */
-      *context_version = 0;
       return NULL;
    }
 
@@ -498,7 +493,6 @@ static int
 doOneContext(EGLDisplay d,
              EGLContext ctx,
              const char *api_name,
-             int version,
              struct options opts)
 {
    printf("%s vendor: %s\n", api_name, glGetString(GL_VENDOR));
@@ -577,8 +571,6 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
    EGLBoolean do_opengl_compat = (opts.api == OPENGL || opts.api == ALL);
    EGLBoolean do_opengl_es = (opts.api == OPENGL_ES || opts.api == ALL);
 
-   int version;
-
    if (has_opengl && (do_opengl_core || do_opengl_compat)) {
       EGLBoolean api_result = eglBindAPI(EGL_OPENGL_API);
       if (api_result) {
@@ -590,11 +582,10 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
                                    config,
                                    EGL_OPENGL_API,
                                    EGL_TRUE,
-                                   EGL_TRUE,
-                                   &version);
+                                   EGL_TRUE);
 
             if (ctx)
-               if (doOneContext(d, ctx, "OpenGL core profile", version, opts) == 0)
+               if (doOneContext(d, ctx, "OpenGL core profile", opts) == 0)
                   if (!eglDestroyContext(d, ctx))
                      return 1;
          }
@@ -604,10 +595,9 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
                                    config,
                                    EGL_OPENGL_API,
                                    khr_create_context,
-                                   EGL_FALSE,
-                                   &version);
+                                   EGL_FALSE);
             if (ctx)
-               if (doOneContext(d, ctx, "OpenGL compatibility profile", version, opts) == 0)
+               if (doOneContext(d, ctx, "OpenGL compatibility profile", opts) == 0)
                   if (!eglDestroyContext(d, ctx))
                      return 1;
          }
@@ -622,11 +612,10 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
                                            config,
                                            EGL_OPENGL_ES_API,
                                            khr_create_context,
-                                           EGL_FALSE,
-                                           &version);
+                                           EGL_FALSE);
 
          if (ctx) {
-            if (doOneContext(d, ctx, "OpenGL ES profile", version, opts) == 0)
+            if (doOneContext(d, ctx, "OpenGL ES profile", opts) == 0)
                if (!eglDestroyContext(d, ctx))
                   return 1;
          }
