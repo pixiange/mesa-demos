@@ -522,7 +522,7 @@ doOneContext(EGLDisplay d,
             .GetStringi = glGetStringi,
             .GetConvolutionParameteriv = glGetConvolutionParameteriv,
          };
-         print_limits(extensions, api_name, version, &funcs);
+         print_limits(api_name, &funcs);
       }
    }
 

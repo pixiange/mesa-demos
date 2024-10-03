@@ -603,7 +603,7 @@ print_screen_info(Display *dpy, int scrnum,
       }
 
       if (limits) {
-         print_limits(glExtensions, oglstring, version, &extfuncs);
+         print_limits(oglstring, &extfuncs);
       }
 
       if (coreProfile)

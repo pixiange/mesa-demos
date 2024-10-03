@@ -266,7 +266,7 @@ print_screen_info(HDC _hdc, const struct options *opts, GLboolean coreProfile)
       }
 
       if (opts->limits) {
-         print_limits(glExtensions, oglString, version, &extfuncs);
+         print_limits(oglString, &extfuncs);
       }
 
       gladLoaderUnloadGL();

@@ -73,8 +73,7 @@ GLboolean
 extension_supported(const char *ext, const char *extensionsList);
 
 void
-print_limits(const char *extensions, const char *oglstring, int version,
-             const struct ext_functions *extfuncs);
+print_limits(const char *oglstring, const struct ext_functions *extfuncs);
 
 const char *
 bitmask_to_string(const struct bit_info bits[], int numBits, int mask);

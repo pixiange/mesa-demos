@@ -21,6 +21,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -431,8 +432,7 @@ print_program_limits(GLenum target,
  * \param version  20, 21, 30, 31, 32, etc.
  */
 void
-print_limits(const char *extensions, const char *oglstring, int version,
-             const struct ext_functions *extfuncs)
+print_limits(const char *oglstring, const struct ext_functions *extfuncs)
 {
    struct token_name {
       GLuint count;
@@ -667,51 +667,68 @@ print_limits(const char *extensions, const char *oglstring, int version,
       { 1, GL_MAX_VERTEX_STREAMS, "GL_MAX_VERTEX_STREAMS" },
    };
 
-   static const struct {
+   struct {
       const char *extension; /* NULL or GL extension name or version string */
+      bool supported;
       const struct token_name *limits;
       size_t num_limits;
    } sections[] = {
-#define SECTION(ext, tokens) {ext, tokens, ELEMENTS(tokens)}
-      SECTION(NULL, gl10),
-      SECTION("2.0", gl20),
-      SECTION("3.0", gl30),
-      SECTION("3.1", gl31),
-      SECTION("3.2", gl32),
-      SECTION("3.3", gl33),
-      SECTION("4.0", gl40),
-      SECTION("4.1", gl41),
-      SECTION("4.2", gl42),
-      SECTION("4.3", gl43),
-      SECTION("4.4", gl44),
-      SECTION("4.5", gl45),
-      SECTION("4.6", gl46),
-      SECTION("GL_EXT_texture_array", ext_texture_array),
-      SECTION("GL_ARB_texture_cube_map", arb_texture_cube_map),
-      SECTION("GL_NV_texture_rectangle", nv_texture_rectangle),
-      SECTION("GL_ARB_multitexture", arb_multitexture),
-      SECTION("GL_EXT_texture_lod_bias", ext_texture_lod_bias),
-      SECTION("GL_EXT_texture_filter_anisotropic", ext_texture_filter_anisotropic),
-      SECTION("GL_ARB_draw_buffers", arb_draw_buffers),
-      SECTION("GL_ARB_blend_func_extended", arb_blend_func_extended),
-      SECTION("GL_ARB_framebuffer_object", arb_framebuffer_object),
-      SECTION("GL_EXT_transform_feedback", ext_transform_feedback),
-      SECTION("GL_ARB_texture_buffer_object", arb_texture_buffer_object),
-      SECTION("GL_ARB_texture_multisample", arb_texture_multisample),
-      SECTION("GL_ARB_uniform_buffer_object", arb_uniform_buffer_object),
-      SECTION("GL_ARB_vertex_attrib_binding", arb_vertex_attrib_binding),
-      SECTION("GL_ARB_tessellation_shader", arb_tessellation_shader),
-      SECTION("GL_ARB_transform_feedback3", arb_transform_feedback3),
-#undef SECTION
+
+#define SECTION_GL(major, minor, tokens) {  \
+   #major "." #minor,                       \
+   GLAD_GL_VERSION_ ## major ## _ ## minor, \
+   tokens,                                  \
+   ELEMENTS(tokens)                         \
+}
+
+#define SECTION_EXT(ext, tokens) { \
+   #ext,                           \
+   GLAD_GL_ ## ext,                \
+   tokens,                         \
+   ELEMENTS(tokens)                \
+}
+
+      SECTION_GL(1, 0, gl10),
+      SECTION_GL(2, 0, gl20),
+      SECTION_GL(3, 0, gl30),
+      SECTION_GL(3, 1, gl31),
+      SECTION_GL(3, 2, gl32),
+      SECTION_GL(3, 3, gl33),
+      SECTION_GL(4, 0, gl40),
+      SECTION_GL(4, 1, gl41),
+      SECTION_GL(4, 2, gl42),
+      SECTION_GL(4, 3, gl43),
+      SECTION_GL(4, 4, gl44),
+      SECTION_GL(4, 5, gl45),
+      SECTION_GL(4, 6, gl46),
+
+      SECTION_EXT(EXT_texture_array, ext_texture_array),
+      SECTION_EXT(ARB_texture_cube_map, arb_texture_cube_map),
+      SECTION_EXT(NV_texture_rectangle, nv_texture_rectangle),
+      SECTION_EXT(ARB_multitexture, arb_multitexture),
+      SECTION_EXT(EXT_texture_lod_bias, ext_texture_lod_bias),
+      SECTION_EXT(EXT_texture_filter_anisotropic, ext_texture_filter_anisotropic),
+      SECTION_EXT(ARB_draw_buffers, arb_draw_buffers),
+      SECTION_EXT(ARB_blend_func_extended, arb_blend_func_extended),
+      SECTION_EXT(ARB_framebuffer_object, arb_framebuffer_object),
+      SECTION_EXT(EXT_transform_feedback, ext_transform_feedback),
+      SECTION_EXT(ARB_texture_buffer_object, arb_texture_buffer_object),
+      SECTION_EXT(ARB_texture_multisample, arb_texture_multisample),
+      SECTION_EXT(ARB_uniform_buffer_object, arb_uniform_buffer_object),
+      SECTION_EXT(ARB_vertex_attrib_binding, arb_vertex_attrib_binding),
+      SECTION_EXT(ARB_tessellation_shader, arb_tessellation_shader),
+      SECTION_EXT(ARB_transform_feedback3, arb_transform_feedback3),
+
+#undef SECTION_GL
+#undef SECTION_EXT
+
    };
 
    printf("%s limits:\n", oglstring);
    for (unsigned i = 0; i < ELEMENTS(sections); i++) {
-      if (!sections[i].extension ||
-          version_supported(sections[i].extension, version) ||
-          extension_supported(sections[i].extension, extensions)) {
+      if (sections[i].supported) {
          const struct token_name *limits = sections[i].limits;
-         if (sections[i].extension) {
+         if (i > 0) {
             printf("  %s:\n", sections[i].extension);
          }
 
@@ -732,7 +749,7 @@ print_limits(const char *extensions, const char *oglstring, int version,
    }
 
    /* these don't fit into the above mechanism, unfortunately */
-   if (extension_supported("GL_ARB_imaging", extensions)) {
+   if (GLAD_GL_ARB_imaging) {
       GLint d;
       printf("  GL_ARB_imaging:\n");
       extfuncs->GetConvolutionParameteriv(GL_CONVOLUTION_2D,
@@ -745,7 +762,7 @@ print_limits(const char *extensions, const char *oglstring, int version,
       printf("    GL_MAX_COLOR_MATRIX_STACK_DEPTH = %d\n", d);
    }
 
-   if (extension_supported("GL_ARB_texture_compression", extensions)) {
+   if (GLAD_GL_ARB_texture_compression) {
       GLint j, n;
       GLint *formats;
       printf("  GL_ARB_texture_compression:\n");
@@ -759,8 +776,7 @@ print_limits(const char *extensions, const char *oglstring, int version,
       free(formats);
    }
 
-#if defined(GL_VERSION_4_3)
-   if (version >= 43) {
+   if (GLAD_GL_VERSION_4_3) {
       GLint j, n = 0;
       printf("  4.3:\n");
       glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &n);
@@ -779,18 +795,13 @@ print_limits(const char *extensions, const char *oglstring, int version,
          printf("      %s\n", lang);
       }
    }
-#endif
 
-#if defined(GL_ARB_vertex_program)
-   if (extension_supported("GL_ARB_vertex_program", extensions)) {
+   if (GLAD_GL_ARB_vertex_program) {
       print_program_limits(GL_VERTEX_PROGRAM_ARB, extfuncs);
    }
-#endif
-#if defined(GL_ARB_fragment_program)
-   if (extension_supported("GL_ARB_fragment_program", extensions)) {
+   if (GLAD_GL_ARB_fragment_program) {
       print_program_limits(GL_FRAGMENT_PROGRAM_ARB, extfuncs);
    }
-#endif
 }
 
 
