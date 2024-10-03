@@ -585,6 +585,19 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
    static const struct token_name gl46[] = {
       { 1, GL_MAX_TEXTURE_MAX_ANISOTROPY, "GL_MAX_TEXTURE_MAX_ANISOTROPY" },
    };
+
+   static const struct token_name es20[] = {
+      { 1, GL_MAX_TEXTURE_SIZE, "GL_MAX_TEXTURE_SIZE" },
+      { 2, GL_MAX_VIEWPORT_DIMS, "GL_MAX_VIEWPORT_DIMS" },
+      { 2, GL_ALIASED_LINE_WIDTH_RANGE, "GL_ALIASED_LINE_WIDTH_RANGE" },
+      { 2, GL_ALIASED_POINT_SIZE_RANGE, "GL_ALIASED_POINT_SIZE_RANGE" },
+   };
+   static const struct token_name es30[] = {
+      { 1, GL_MAX_ELEMENTS_VERTICES, "GL_MAX_ELEMENTS_VERTICES" },
+      { 1, GL_MAX_ELEMENTS_INDICES, "GL_MAX_ELEMENTS_INDICES" },
+      { 1, GL_MAX_3D_TEXTURE_SIZE, "GL_MAX_3D_TEXTURE_SIZE" },
+   };
+
    static const struct token_name ext_texture_array[] = {
       { 1, GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, "GL_MAX_ARRAY_TEXTURE_LAYERS" },
    };
@@ -681,6 +694,13 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
    ELEMENTS(tokens)                         \
 }
 
+#define SECTION_ES(major, minor, tokens) {     \
+   #major "." #minor,                          \
+   GLAD_GL_ES_VERSION_ ## major ## _ ## minor, \
+   tokens,                                     \
+   ELEMENTS(tokens)                            \
+}
+
 #define SECTION_EXT(ext, tokens) { \
    #ext,                           \
    GLAD_GL_ ## ext,                \
@@ -702,6 +722,9 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
       SECTION_GL(4, 5, gl45),
       SECTION_GL(4, 6, gl46),
 
+      SECTION_ES(2, 0, es20),
+      SECTION_ES(3, 0, es30),
+
       SECTION_EXT(EXT_texture_array, ext_texture_array),
       SECTION_EXT(ARB_texture_cube_map, arb_texture_cube_map),
       SECTION_EXT(NV_texture_rectangle, nv_texture_rectangle),
@@ -720,6 +743,7 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
       SECTION_EXT(ARB_transform_feedback3, arb_transform_feedback3),
 
 #undef SECTION_GL
+#undef SECTION_ES
 #undef SECTION_EXT
 
    };
