@@ -358,13 +358,6 @@ version_supported(const char *verString, int verNum)
 }
 
 
-struct token_name
-{
-   GLenum token;
-   const char *name;
-};
-
-
 /**
  * Print interesting limits for vertex/fragment programs.
  */
