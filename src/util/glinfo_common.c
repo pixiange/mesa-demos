@@ -438,6 +438,7 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
       GLuint count;
       GLenum token;
       const char *name;
+      bool disable;
    };
    static const struct token_name gl10[] = {
       { 1, GL_MAX_ATTRIB_STACK_DEPTH, "GL_MAX_ATTRIB_STACK_DEPTH" },
@@ -642,16 +643,18 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
       { 1, GL_MAX_DEPTH_TEXTURE_SAMPLES, "GL_MAX_DEPTH_TEXTURE_SAMPLES" },
       { 1, GL_MAX_INTEGER_SAMPLES, "GL_MAX_INTEGER_SAMPLES" },
    };
-   static const struct token_name arb_uniform_buffer_object[] = {
+
+   bool have_gs = GLAD_GL_VERSION_3_2 || GLAD_GL_ARB_geometry_shader4;
+   struct token_name arb_uniform_buffer_object[] = {
       { 1, GL_MAX_VERTEX_UNIFORM_BLOCKS, "GL_MAX_VERTEX_UNIFORM_BLOCKS" },
       { 1, GL_MAX_FRAGMENT_UNIFORM_BLOCKS, "GL_MAX_FRAGMENT_UNIFORM_BLOCKS" },
-      { 1, GL_MAX_GEOMETRY_UNIFORM_BLOCKS, "GL_MAX_GEOMETRY_UNIFORM_BLOCKS" },
+      { 1, GL_MAX_GEOMETRY_UNIFORM_BLOCKS, "GL_MAX_GEOMETRY_UNIFORM_BLOCKS", !have_gs },
       { 1, GL_MAX_COMBINED_UNIFORM_BLOCKS, "GL_MAX_COMBINED_UNIFORM_BLOCKS" },
       { 1, GL_MAX_UNIFORM_BUFFER_BINDINGS, "GL_MAX_UNIFORM_BUFFER_BINDINGS" },
       { 1, GL_MAX_UNIFORM_BLOCK_SIZE, "GL_MAX_UNIFORM_BLOCK_SIZE" },
       { 1, GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS" },
       { 1, GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS" },
-      { 1, GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS" },
+      { 1, GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS, "GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS", !have_gs },
       { 1, GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, "GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT" },
    };
    static const struct token_name arb_vertex_attrib_binding[] = {
@@ -757,6 +760,10 @@ print_limits(const char *oglstring, const struct ext_functions *extfuncs)
          }
 
          for (unsigned j = 0; j < sections[i].num_limits; ++j) {
+
+            if (limits[j].disable)
+               continue;
+
             GLint max[2];
             glGetIntegerv(limits[j].token, max);
             if (glGetError() == GL_NO_ERROR) {
