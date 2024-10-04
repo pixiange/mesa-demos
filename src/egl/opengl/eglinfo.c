@@ -363,7 +363,7 @@ PrintDeviceExtensions(EGLDeviceEXT d, EGLBoolean single_line)
 }
 
 
-static const char*
+static void
 PrintContextExtensions(const char *api_name, EGLBoolean single_line)
 {
    printf("%s extensions:\n", api_name);
@@ -381,8 +381,6 @@ PrintContextExtensions(const char *api_name, EGLBoolean single_line)
    }
 
    print_extension_list(extensions, single_line);
-
-   return extensions;
 }
 
 
@@ -489,7 +487,7 @@ createEGLContext(EGLDisplay d, EGLConfig conf, int api,
    return NULL;
 }
 
-static int
+static void
 doOneContext(EGLDisplay d,
              EGLContext ctx,
              const char *api_name,
@@ -501,12 +499,8 @@ doOneContext(EGLDisplay d,
    printf("%s shading language version: %s\n", api_name,
           glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-   const char *extensions = NULL;
    if (opts.mode != Brief) {
-      extensions = PrintContextExtensions(api_name, opts.single_line);
-
-      if (!extensions)
-         return 1;
+      PrintContextExtensions(api_name, opts.single_line);
 
       print_gpu_memory_info();
 
@@ -522,7 +516,6 @@ doOneContext(EGLDisplay d,
 
    eglMakeCurrent(d, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
    gladLoaderUnloadGL();
-   return 0;
 }
 
 
@@ -584,10 +577,11 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
                                    EGL_TRUE,
                                    EGL_TRUE);
 
-            if (ctx)
-               if (doOneContext(d, ctx, "OpenGL core profile", opts) == 0)
-                  if (!eglDestroyContext(d, ctx))
-                     return 1;
+            if (ctx) {
+               doOneContext(d, ctx, "OpenGL core profile", opts);
+               if (!eglDestroyContext(d, ctx))
+                  return 1;
+            }
          }
 
          if (do_opengl_compat) {
@@ -596,10 +590,11 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
                                    EGL_OPENGL_API,
                                    khr_create_context,
                                    EGL_FALSE);
-            if (ctx)
-               if (doOneContext(d, ctx, "OpenGL compatibility profile", opts) == 0)
-                  if (!eglDestroyContext(d, ctx))
-                     return 1;
+            if (ctx) {
+               doOneContext(d, ctx, "OpenGL compatibility profile", opts);
+               if (!eglDestroyContext(d, ctx))
+                  return 1;
+            }
          }
       }
    }
@@ -615,9 +610,9 @@ doOneDisplay(EGLDisplay d, const char *name, struct options opts)
                                            EGL_FALSE);
 
          if (ctx) {
-            if (doOneContext(d, ctx, "OpenGL ES profile", opts) == 0)
-               if (!eglDestroyContext(d, ctx))
-                  return 1;
+            doOneContext(d, ctx, "OpenGL ES profile", opts);
+            if (!eglDestroyContext(d, ctx))
+               return 1;
          }
       }
    }
