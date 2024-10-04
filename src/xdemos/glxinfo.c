@@ -110,13 +110,6 @@ struct options {
 
 
 /**
- * Version of the context that was created
- *
- * 20, 21, 30, 31, 32, etc.
- */
-static int version;
-
-/**
  * GL Error checking/warning.
  */
 static void
@@ -570,18 +563,16 @@ print_screen_info(Display *dpy, int scrnum,
 
       printf("%s version string: %s\n", oglstring, glVersion);
 
-      version = (glVersion[0] - '0') * 10 + (glVersion[2] - '0');
-
       CheckError(__LINE__);
 
-      if (version >= 20) {
+      if (GLAD_GL_VERSION_2_0 || GLAD_GL_ES_VERSION_2_0) {
          char *v = (char *) glGetString(GL_SHADING_LANGUAGE_VERSION);
          printf("%s shading language version string: %s\n", oglstring, v);
       }
 
       CheckError(__LINE__);
 
-      if (version >= 30 && !es2Profile) {
+      if (GLAD_GL_VERSION_3_0) {
          GLint flags;
          glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
          printf("%s context flags: %s\n", oglstring, context_flags_string(flags));
@@ -589,7 +580,7 @@ print_screen_info(Display *dpy, int scrnum,
 
       CheckError(__LINE__);
 
-      if (version >= 32 && !es2Profile) {
+      if (GLAD_GL_VERSION_3_2) {
          GLint mask;
          glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mask);
          printf("%s profile mask: %s\n", oglstring, profile_mask_string(mask));
