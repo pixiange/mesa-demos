@@ -93,7 +93,6 @@ print_screen_info(HDC _hdc, const struct options *opts, GLboolean coreProfile)
    int visinfo;
    HDC hdc;
    PIXELFORMATDESCRIPTOR pfd;
-   int version;
    const char *oglString = "OpenGL";
 
    memset(&wc, 0, sizeof wc);
@@ -242,8 +241,6 @@ print_screen_info(HDC _hdc, const struct options *opts, GLboolean coreProfile)
       }
 
       printf("%s version string: %s\n", oglString, glVersion);
-
-      version = (glVersion[0] - '0') * 10 + (glVersion[2] - '0');
 
       if (GLAD_GL_VERSION_2_0) {
          char *v = (char *) glGetString(GL_SHADING_LANGUAGE_VERSION);
