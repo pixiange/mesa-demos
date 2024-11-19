@@ -1322,20 +1322,8 @@ usage(void)
 }
 
 static void
-print_info()
+print_device_extensions()
 {
-   VkPhysicalDeviceProperties properties;
-   vkGetPhysicalDeviceProperties(physical_device, &properties);
-   printf("apiVersion       = %d.%d.%d\n",
-            VK_API_VERSION_MAJOR(properties.apiVersion),
-            VK_API_VERSION_MINOR(properties.apiVersion),
-            VK_API_VERSION_PATCH(properties.apiVersion));
-   printf("driverVersion    = %04x\n", properties.driverVersion);
-   printf("vendorID         = %04x\n", properties.vendorID);
-   printf("deviceID         = %04x\n", properties.deviceID);
-   printf("deviceType       = %s\n", get_devtype_str(properties.deviceType));
-   printf("deviceName       = %s\n", properties.deviceName);
-
    uint32_t num_extensions = 0;
    VkExtensionProperties *extensions;
    vkEnumerateDeviceExtensionProperties(physical_device, NULL, &num_extensions, NULL);
@@ -1349,6 +1337,23 @@ print_info()
       for (int i = 0; i < num_extensions; ++i)
          printf("\t%s\n", extensions[i].extensionName);
    }
+}
+
+static void
+print_info()
+{
+   VkPhysicalDeviceProperties properties;
+   vkGetPhysicalDeviceProperties(physical_device, &properties);
+   printf("apiVersion       = %d.%d.%d\n",
+            VK_API_VERSION_MAJOR(properties.apiVersion),
+            VK_API_VERSION_MINOR(properties.apiVersion),
+            VK_API_VERSION_PATCH(properties.apiVersion));
+   printf("driverVersion    = %04x\n", properties.driverVersion);
+   printf("vendorID         = %04x\n", properties.vendorID);
+   printf("deviceID         = %04x\n", properties.deviceID);
+   printf("deviceType       = %s\n", get_devtype_str(properties.deviceType));
+   printf("deviceName       = %s\n", properties.deviceName);
+   print_device_extensions();
 }
 
 static VkSampleCountFlagBits
