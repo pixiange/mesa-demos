@@ -717,8 +717,7 @@ event_loop(struct egl_manager *eman, EGLint surface_type, EGLint w, EGLint h)
 
          /* advance rotation for next frame */
          angle += 70.0 * dt;  /* 70 degrees per second */
-         if (angle > 3600.0)
-             angle -= 3600.0;
+         angle = fmodf(angle, 360.0f); /* prevents eventual overflow */
 
          switch (surface_type) {
          case GEARS_WINDOW:

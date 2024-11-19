@@ -469,8 +469,7 @@ event_loop(Display *dpy)
 
          /* advance rotation for next frame */
          angle += 70.0 * dt; /* 70 degrees per second */
-         if (angle > 3600.0)
-            angle -= 3600.0;
+         angle = fmodf(angle, 360.0f); /* prevents eventual overflow */
 
          draw(dpy, win);
 
