@@ -408,11 +408,11 @@ draw(void)
 
    if (dir[0] > 0) {
       offset = 8.0;
-      base = obs[0] - fmod(obs[0], 8.0);
+      base = obs[0] - fmodf(obs[0], 8.0f);
    }
    else {
       offset = -8.0;
-      base = obs[0] + (8.0 - fmod(obs[0], 8.0));
+      base = obs[0] + (8.0 - fmodf(obs[0], 8.0f));
    }
 
    glPushMatrix();
