@@ -1554,18 +1554,6 @@ main(int argc, char *argv[])
    while (1) {
       static int frames = 0;
       static double tRot0 = -1.0, tRate0 = -1.0;
-      double dt, t = current_time();
-
-      if (tRot0 < 0.0)
-         tRot0 = t;
-      dt = t - tRot0;
-      tRot0 = t;
-
-      if (animate) {
-         /* advance rotation for next frame */
-         angle += 70.0 * dt;  /* 70 degrees per second */
-         angle = fmodf(angle, 360.0f); /* prevents eventual overflow */
-      }
 
       if (wsi.update_window()) {
          printf("update window failed\n");
@@ -1590,6 +1578,19 @@ main(int argc, char *argv[])
       assert(result == VK_SUCCESS);
 
       assert(image_index < ARRAY_SIZE(image_data));
+
+      double dt, t = current_time();
+
+      if (tRot0 < 0.0)
+         tRot0 = t;
+      dt = t - tRot0;
+      tRot0 = t;
+
+      if (animate) {
+         /* advance rotation for next frame */
+         angle += 70.0 * dt;  /* 70 degrees per second */
+         angle = fmodf(angle, 360.0f); /* prevents eventual overflow */
+      }
 
       vkBeginCommandBuffer(frame_data[frame_index].cmd_buffer,
          &(VkCommandBufferBeginInfo) {
