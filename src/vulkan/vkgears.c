@@ -1326,13 +1326,25 @@ print_device_extensions()
 {
    uint32_t num_extensions = 0;
    VkExtensionProperties *extensions;
-   vkEnumerateDeviceExtensionProperties(physical_device, NULL, &num_extensions, NULL);
+   VkResult result =
+      vkEnumerateDeviceExtensionProperties(physical_device, NULL,
+                                           &num_extensions, NULL);
+   if (result != VK_SUCCESS)
+      error("Failed to enumerate device extensions");
+
    if (num_extensions > 0) {
       extensions = calloc(num_extensions, sizeof(VkExtensionProperties));
       if (!extensions)
          error("Failed to allocate memory");
 
-      vkEnumerateDeviceExtensionProperties(physical_device, NULL, &num_extensions, extensions);
+      result =
+         vkEnumerateDeviceExtensionProperties(physical_device, NULL,
+                                              &num_extensions, extensions);
+      if (result != VK_SUCCESS) {
+         free(extensions);
+         error("Failed to enumerate device extensions");
+      }
+
       printf("deviceExtensions =\n");
       for (int i = 0; i < num_extensions; ++i)
          printf("\t%s\n", extensions[i].extensionName);
