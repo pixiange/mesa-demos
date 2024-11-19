@@ -1336,6 +1336,8 @@ print_device_extensions()
       printf("deviceExtensions =\n");
       for (int i = 0; i < num_extensions; ++i)
          printf("\t%s\n", extensions[i].extensionName);
+
+      free(extensions);
    }
 }
 
