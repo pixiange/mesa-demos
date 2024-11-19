@@ -145,9 +145,9 @@ gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
       glVertex3f(r0 * cos(angle), r0 * sin(angle), width * 0.5);
       glVertex3f(r1 * cos(angle), r1 * sin(angle), width * 0.5);
       if (i < teeth) {
-	 glVertex3f(r0 * cos(angle), r0 * sin(angle), width * 0.5);
-	 glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
-		    width * 0.5);
+         glVertex3f(r0 * cos(angle), r0 * sin(angle), width * 0.5);
+         glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
+                    width * 0.5);
       }
    }
    glEnd();
@@ -161,9 +161,9 @@ gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
       glVertex3f(r1 * cos(angle), r1 * sin(angle), width * 0.5);
       glVertex3f(r2 * cos(angle + da), r2 * sin(angle + da), width * 0.5);
       glVertex3f(r2 * cos(angle + 2 * da), r2 * sin(angle + 2 * da),
-		 width * 0.5);
+                 width * 0.5);
       glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
-		 width * 0.5);
+                 width * 0.5);
    }
    glEnd();
 
@@ -176,9 +176,9 @@ gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
       glVertex3f(r1 * cos(angle), r1 * sin(angle), -width * 0.5);
       glVertex3f(r0 * cos(angle), r0 * sin(angle), -width * 0.5);
       if (i < teeth) {
-	 glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
-		    -width * 0.5);
-	 glVertex3f(r0 * cos(angle), r0 * sin(angle), -width * 0.5);
+         glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
+                    -width * 0.5);
+         glVertex3f(r0 * cos(angle), r0 * sin(angle), -width * 0.5);
       }
    }
    glEnd();
@@ -190,9 +190,9 @@ gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
       angle = i * 2.0 * M_PI / teeth;
 
       glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
-		 -width * 0.5);
+                 -width * 0.5);
       glVertex3f(r2 * cos(angle + 2 * da), r2 * sin(angle + 2 * da),
-		 -width * 0.5);
+                 -width * 0.5);
       glVertex3f(r2 * cos(angle + da), r2 * sin(angle + da), -width * 0.5);
       glVertex3f(r1 * cos(angle), r1 * sin(angle), -width * 0.5);
    }
@@ -215,16 +215,16 @@ gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
       glVertex3f(r2 * cos(angle + da), r2 * sin(angle + da), -width * 0.5);
       glNormal3f(cos(angle), sin(angle), 0.0);
       glVertex3f(r2 * cos(angle + 2 * da), r2 * sin(angle + 2 * da),
-		 width * 0.5);
+                 width * 0.5);
       glVertex3f(r2 * cos(angle + 2 * da), r2 * sin(angle + 2 * da),
-		 -width * 0.5);
+                 -width * 0.5);
       u = r1 * cos(angle + 3 * da) - r2 * cos(angle + 2 * da);
       v = r1 * sin(angle + 3 * da) - r2 * sin(angle + 2 * da);
       glNormal3f(v, -u, 0.0);
       glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
-		 width * 0.5);
+                 width * 0.5);
       glVertex3f(r1 * cos(angle + 3 * da), r1 * sin(angle + 3 * da),
-		 -width * 0.5);
+                 -width * 0.5);
       glNormal3f(cos(angle), sin(angle), 0.0);
    }
 
@@ -442,9 +442,8 @@ make_fullscreen(Display *dpy, Window w)
    if (NET_WM_STATE == None || NET_WM_STATE_FULLSCREEN == None)
       return;
 
-   XChangeProperty(dpy, w, NET_WM_STATE,
-		   XA_ATOM, 32, PropModeReplace,
-		   (unsigned char *)&NET_WM_STATE_FULLSCREEN, 1);
+   XChangeProperty(dpy, w, NET_WM_STATE, XA_ATOM, 32, PropModeReplace,
+                   (unsigned char *)&NET_WM_STATE_FULLSCREEN, 1);
 }
 
 static EGLBoolean
@@ -640,7 +639,7 @@ texture_gears(struct egl_manager *eman, int surface_type)
 
 static void
 copy_gears(struct egl_manager *eman,
-	   EGLint tile_w, EGLint tile_h, EGLint w, EGLint h)
+           EGLint tile_w, EGLint tile_h, EGLint w, EGLint h)
 {
    int x, y;
 
@@ -649,8 +648,8 @@ copy_gears(struct egl_manager *eman,
    for (x = 0; x < w; x += tile_w) {
       for (y = 0; y < h; y += tile_h) {
 
-	 XCopyArea(eman->xdpy, eman->xpix, eman->xwin, eman->gc,
-		   0, 0, tile_w, tile_h, x, y);
+         XCopyArea(eman->xdpy, eman->xpix, eman->xwin, eman->gc,
+                  0, 0, tile_w, tile_h, x, y);
       }
    }
 }
@@ -723,41 +722,41 @@ event_loop(struct egl_manager *eman, EGLint surface_type, EGLint w, EGLint h)
 
          switch (surface_type) {
          case GEARS_WINDOW:
-	    draw();
+            draw();
             eglSwapBuffers(eman->dpy, eman->win);
             break;
 
-	 case GEARS_PBUFFER:
-	    draw();
-	    if (!eglCopyBuffers(eman->dpy, eman->pbuf, eman->xpix))
-	       break;
-	    copy_gears(eman, w, h, window_w, window_h);
-	    break;
+         case GEARS_PBUFFER:
+            draw();
+            if (!eglCopyBuffers(eman->dpy, eman->pbuf, eman->xpix))
+               break;
+            copy_gears(eman, w, h, window_w, window_h);
+            break;
 
-	 case GEARS_PBUFFER_TEXTURE:
+         case GEARS_PBUFFER_TEXTURE:
             eglMakeCurrent(eman->dpy, eman->pbuf, eman->pbuf, eman->ctx);
-	    draw();
-	    texture_gears(eman, surface_type);
-	    break;
+            draw();
+            texture_gears(eman, surface_type);
+            break;
 
-	 case GEARS_PIXMAP:
-	    draw();
-	    copy_gears(eman, w, h, window_w, window_h);
-	    break;
+         case GEARS_PIXMAP:
+            draw();
+            copy_gears(eman, w, h, window_w, window_h);
+            break;
 
-	 case GEARS_PIXMAP_TEXTURE:
+         case GEARS_PIXMAP_TEXTURE:
             eglMakeCurrent(eman->dpy, eman->pix, eman->pix, eman->ctx);
-	    draw();
-	    texture_gears(eman, surface_type);
-	    break;
+            draw();
+            texture_gears(eman, surface_type);
+            break;
 
-	 case GEARS_RENDERBUFFER:
-	    glBindFramebuffer(GL_FRAMEBUFFER_EXT, eman->fbo);
-	    draw();
-	    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
-	    texture_gears(eman, surface_type);
-	    break;
-	 }
+         case GEARS_RENDERBUFFER:
+            glBindFramebuffer(GL_FRAMEBUFFER_EXT, eman->fbo);
+            draw();
+            glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+            texture_gears(eman, surface_type);
+            break;
+         }
 
          frames++;
 
@@ -836,19 +835,19 @@ main(int argc, char *argv[])
       }
       else if (strcmp(argv[i], "-pixmap") == 0) {
          surface_type = GEARS_PIXMAP;
-	 attribs[1] |= EGL_PIXMAP_BIT;
+         attribs[1] |= EGL_PIXMAP_BIT;
       }
       else if (strcmp(argv[i], "-pixmap-texture") == 0) {
          surface_type = GEARS_PIXMAP_TEXTURE;
-	 attribs[1] |= EGL_PIXMAP_BIT;
+         attribs[1] |= EGL_PIXMAP_BIT;
       }
       else if (strcmp(argv[i], "-pbuffer") == 0) {
          surface_type = GEARS_PBUFFER;
-	 attribs[1] |= EGL_PBUFFER_BIT;
+         attribs[1] |= EGL_PBUFFER_BIT;
       }
       else if (strcmp(argv[i], "-pbuffer-texture") == 0) {
          surface_type = GEARS_PBUFFER_TEXTURE;
-	 attribs[1] |= EGL_PBUFFER_BIT;
+         attribs[1] |= EGL_PBUFFER_BIT;
       }
       else if (strcmp(argv[i], "-renderbuffer") == 0) {
          surface_type = GEARS_RENDERBUFFER;
@@ -862,7 +861,7 @@ main(int argc, char *argv[])
    x_dpy = XOpenDisplay(dpyName);
    if (!x_dpy) {
       printf("Error: couldn't open display %s\n",
-	     dpyName ? dpyName : getenv("DISPLAY"));
+             dpyName ? dpyName : getenv("DISPLAY"));
       return -1;
    }
 
@@ -875,10 +874,10 @@ main(int argc, char *argv[])
    }
 
    snprintf(win_title, sizeof(win_title),
-	    "xeglgears (%s)", names[surface_type]);
+            "xeglgears (%s)", names[surface_type]);
 
    ret = egl_manager_create_window(eman, win_title, &winWidth, &winHeight,
-				   EGL_TRUE, fullscreen, NULL);
+                                   EGL_TRUE, fullscreen, NULL);
    if (!ret)
       return -1;
 
@@ -894,9 +893,10 @@ main(int argc, char *argv[])
 
 #ifdef EGL_KHR_image
       if (surface_type == GEARS_PIXMAP_TEXTURE)
-	 eman->image = eglCreateImageKHR_func(eman->dpy, eman->ctx,
-					      EGL_NATIVE_PIXMAP_KHR,
-					      (EGLClientBuffer) eman->xpix, NULL);
+         eman->image = eglCreateImageKHR_func(eman->dpy, eman->ctx,
+                                              EGL_NATIVE_PIXMAP_KHR,
+                                              (EGLClientBuffer) eman->xpix,
+                                              NULL);
 #else
       fprintf(stderr, "EGL_KHR_image not found at compile time.\n");
 #endif
@@ -910,12 +910,12 @@ main(int argc, char *argv[])
          EGLint pbuf_attribs[] = {
             EGL_WIDTH, winWidth,
             EGL_HEIGHT, winHeight,
-	    EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGB,
-	    EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
+            EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGB,
+            EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
             EGL_NONE
          };
          ret = (egl_manager_create_pixmap(eman, eman->xwin,
-					  EGL_TRUE, NULL) &&
+                                          EGL_TRUE, NULL) &&
                 egl_manager_create_pbuffer(eman, pbuf_attribs));
          if (ret)
             ret = eglMakeCurrent(eman->dpy, eman->pbuf, eman->pbuf, eman->ctx);
@@ -926,7 +926,7 @@ main(int argc, char *argv[])
    case GEARS_RENDERBUFFER:
       ret = eglMakeCurrent(eman->dpy, eman->win, eman->win, eman->ctx);
       if (ret == EGL_FALSE)
-	 printf("failed to make context current\n");
+         printf("failed to make context current\n");
 
       glGenFramebuffers(1, &eman->fbo);
       glBindFramebuffer(GL_FRAMEBUFFER_EXT, eman->fbo);
@@ -936,15 +936,16 @@ main(int argc, char *argv[])
       glRenderbufferStorage(GL_RENDERBUFFER_EXT, GL_RGBA, winWidth, winHeight);
 #ifdef GL_EXT_framebuffer_object
       glFramebufferRenderbufferEXT_func(GL_FRAMEBUFFER_EXT,
-					GL_COLOR_ATTACHMENT0_EXT,
-					GL_RENDERBUFFER_EXT,
-					color_rb);
+                                        GL_COLOR_ATTACHMENT0_EXT,
+                                        GL_RENDERBUFFER_EXT,
+                                        color_rb);
 #endif
 
 #ifdef EGL_KHR_image
       eman->image = eglCreateImageKHR_func(eman->dpy, eman->ctx,
-					   EGL_GL_RENDERBUFFER_KHR,
-					   (EGLClientBuffer)(uintptr_t)color_rb, NULL);
+                                           EGL_GL_RENDERBUFFER_KHR,
+                                           (EGLClientBuffer)(uintptr_t)color_rb,
+                                           NULL);
 #else
       fprintf(stderr, "EGL_KHR_image not found at compile time.\n");
 #endif
@@ -952,16 +953,16 @@ main(int argc, char *argv[])
       glGenRenderbuffers(1, &depth_rb);
       glBindRenderbuffer(GL_RENDERBUFFER_EXT, depth_rb);
       glRenderbufferStorage(GL_RENDERBUFFER_EXT,
-			    GL_DEPTH_COMPONENT, winWidth, winHeight);
+                            GL_DEPTH_COMPONENT, winWidth, winHeight);
 #ifdef GL_EXT_framebuffer_object
       glFramebufferRenderbufferEXT_func(GL_FRAMEBUFFER_EXT,
-					GL_DEPTH_ATTACHMENT_EXT,
-					GL_RENDERBUFFER_EXT,
-					depth_rb);
+                                        GL_DEPTH_ATTACHMENT_EXT,
+                                        GL_RENDERBUFFER_EXT,
+                                        depth_rb);
 
       if (glCheckFramebufferStatusEXT_func(GL_FRAMEBUFFER_EXT) != GL_FRAMEBUFFER_COMPLETE) {
-	 printf("framebuffer not complete\n");
-	 exit(1);
+         printf("framebuffer not complete\n");
+         exit(1);
       }
 #endif
 
@@ -975,18 +976,18 @@ main(int argc, char *argv[])
    switch (surface_type) {
    case GEARS_PIXMAP_TEXTURE:
    case GEARS_RENDERBUFFER:
-	   glGenTextures(1, &texture);
-   	   glBindTexture(GL_TEXTURE_2D, texture);
+      glGenTextures(1, &texture);
+      glBindTexture(GL_TEXTURE_2D, texture);
 #ifdef GL_OES_EGL_image
-	   glEGLImageTargetTexture2DOES_func(GL_TEXTURE_2D, eman->image);
+      glEGLImageTargetTexture2DOES_func(GL_TEXTURE_2D, eman->image);
 #else
-           fprintf(stderr, "GL_OES_EGL_image not found at compile time.\n");
+      fprintf(stderr, "GL_OES_EGL_image not found at compile time.\n");
 #endif
-	   break;
+      break;
    case GEARS_PBUFFER_TEXTURE:
-	   glGenTextures(1, &texture);
-   	   glBindTexture(GL_TEXTURE_2D, texture);
-	   break;
+      glGenTextures(1, &texture);
+      glBindTexture(GL_TEXTURE_2D, texture);
+      break;
    }
 
    if (!ret) {

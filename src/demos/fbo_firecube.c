@@ -104,44 +104,44 @@ static const char *texNames[] =
 
 
 
-#define vinit(a,i,j,k) {			\
-      (a)[0]=i;					\
-      (a)[1]=j;					\
-      (a)[2]=k;					\
+#define vinit(a,i,j,k) { \
+      (a)[0]=i;          \
+      (a)[1]=j;          \
+      (a)[2]=k;          \
    }
 
-#define vinit4(a,i,j,k,w) {			\
-      (a)[0]=i;					\
-      (a)[1]=j;					\
-      (a)[2]=k;					\
-      (a)[3]=w;					\
+#define vinit4(a,i,j,k,w) { \
+      (a)[0]=i;             \
+      (a)[1]=j;             \
+      (a)[2]=k;             \
+      (a)[3]=w;             \
    }
 
 
-#define vadds(a,dt,b) {				\
-      (a)[0]+=(dt)*(b)[0];			\
-      (a)[1]+=(dt)*(b)[1];			\
-      (a)[2]+=(dt)*(b)[2];			\
+#define vadds(a,dt,b) {    \
+      (a)[0]+=(dt)*(b)[0]; \
+      (a)[1]+=(dt)*(b)[1]; \
+      (a)[2]+=(dt)*(b)[2]; \
    }
 
-#define vequ(a,b) {				\
-      (a)[0]=(b)[0];				\
-      (a)[1]=(b)[1];				\
-      (a)[2]=(b)[2];				\
+#define vequ(a,b) {  \
+      (a)[0]=(b)[0]; \
+      (a)[1]=(b)[1]; \
+      (a)[2]=(b)[2]; \
    }
 
-#define vinter(a,dt,b,c) {			\
-      (a)[0]=(dt)*(b)[0]+(1.0-dt)*(c)[0];	\
-      (a)[1]=(dt)*(b)[1]+(1.0-dt)*(c)[1];	\
-      (a)[2]=(dt)*(b)[2]+(1.0-dt)*(c)[2];	\
+#define vinter(a,dt,b,c) {                \
+      (a)[0]=(dt)*(b)[0]+(1.0-dt)*(c)[0]; \
+      (a)[1]=(dt)*(b)[1]+(1.0-dt)*(c)[1]; \
+      (a)[2]=(dt)*(b)[2]+(1.0-dt)*(c)[2]; \
    }
 
 #define clamp(a)        ((a) < 0.0 ? 0.0 : ((a) < 1.0 ? (a) : 1.0))
 
-#define vclamp(v) {				\
-      (v)[0]=clamp((v)[0]);			\
-      (v)[1]=clamp((v)[1]);			\
-      (v)[2]=clamp((v)[2]);			\
+#define vclamp(v) {         \
+      (v)[0]=clamp((v)[0]); \
+      (v)[1]=clamp((v)[1]); \
+      (v)[2]=clamp((v)[2]); \
    }
 
 static GLint WinWidth = 800, WinHeight = 800;
@@ -265,26 +265,26 @@ setnewpart(part * p)
 
    vinit(v, sin(a) * eject_r * vrnd(), 0.15, cos(a) * eject_r * vrnd());
    vinit(p->p[0], v[0] + vrnd() * ridtri, v[1] + vrnd() * ridtri,
-	 v[2] + vrnd() * ridtri);
+         v[2] + vrnd() * ridtri);
    vinit(p->p[1], v[0] + vrnd() * ridtri, v[1] + vrnd() * ridtri,
-	 v[2] + vrnd() * ridtri);
+         v[2] + vrnd() * ridtri);
    vinit(p->p[2], v[0] + vrnd() * ridtri, v[1] + vrnd() * ridtri,
-	 v[2] + vrnd() * ridtri);
+         v[2] + vrnd() * ridtri);
 
    vinit(p->v, v[0] * eject_vl / (eject_r / 2),
-	 vrnd() * eject_vy + eject_vy / 2, v[2] * eject_vl / (eject_r / 2));
+         vrnd() * eject_vy + eject_vy / 2, v[2] * eject_vl / (eject_r / 2));
 
    c = blu;
 
    vinit4(p->c[0], c[0] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
-	  c[1] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
-	  c[2] * ((1.0 - RIDCOL) + vrnd() * RIDCOL), 1.0);
+          c[1] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
+          c[2] * ((1.0 - RIDCOL) + vrnd() * RIDCOL), 1.0);
    vinit4(p->c[1], c[0] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
-	  c[1] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
-	  c[2] * ((1.0 - RIDCOL) + vrnd() * RIDCOL), 1.0);
+          c[1] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
+          c[2] * ((1.0 - RIDCOL) + vrnd() * RIDCOL), 1.0);
    vinit4(p->c[2], c[0] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
-	  c[1] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
-	  c[2] * ((1.0 - RIDCOL) + vrnd() * RIDCOL), 1.0);
+          c[1] * ((1.0 - RIDCOL) + vrnd() * RIDCOL),
+          c[2] * ((1.0 - RIDCOL) + vrnd() * RIDCOL), 1.0);
 }
 
 static void
@@ -482,8 +482,8 @@ drawfire(void)
    glPushMatrix();
    calcposobs();
    gluLookAt(obs[0], obs[1], obs[2],
-	     obs[0] + dir[0], obs[1] + dir[1], obs[2] + dir[2],
-	     0.0, 1.0, 0.0);
+             obs[0] + dir[0], obs[1] + dir[1], obs[2] + dir[2],
+             0.0, 1.0, 0.0);
 
    glColor4f(1.0, 1.0, 1.0, 1.0);
 
@@ -515,14 +515,14 @@ drawfire(void)
    if (shadows) {
       glBegin(GL_TRIANGLES);
       for (j = 0; j < np; j++) {
-	 glColor4f(black[0], black[1], black[2], p[j].c[0][3]);
-	 glVertex3f(p[j].p[0][0], 0.1, p[j].p[0][2]);
+         glColor4f(black[0], black[1], black[2], p[j].c[0][3]);
+         glVertex3f(p[j].p[0][0], 0.1, p[j].p[0][2]);
 
-	 glColor4f(black[0], black[1], black[2], p[j].c[1][3]);
-	 glVertex3f(p[j].p[1][0], 0.1, p[j].p[1][2]);
+         glColor4f(black[0], black[1], black[2], p[j].c[1][3]);
+         glVertex3f(p[j].p[1][0], 0.1, p[j].p[1][2]);
 
-	 glColor4f(black[0], black[1], black[2], p[j].c[2][3]);
-	 glVertex3f(p[j].p[2][0], 0.1, p[j].p[2][2]);
+         glColor4f(black[0], black[1], black[2], p[j].c[2][3]);
+         glVertex3f(p[j].p[2][0], 0.1, p[j].p[2][2]);
       }
       glEnd();
    }
@@ -550,8 +550,8 @@ drawfire(void)
 
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   glOrtho(-0.5, 639.5, -0.5, 479.5
-	   , -1.0, 1.0);
+   glOrtho(-0.5, 639.5, -0.5, 479.5,
+           -1.0, 1.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
 
@@ -564,7 +564,7 @@ drawfire(void)
    glColor3f(1.0, 0.0, 0.0);
    glRasterPos2i(10, 470);
    printstring(GLUT_BITMAP_HELVETICA_10,
-	       "Fire V1.5 Written by David Bucciarelli (tech.hmw@plus.it)");
+               "Fire V1.5 Written by David Bucciarelli (tech.hmw@plus.it)");
 
    if (help)
       printhelp();
@@ -577,13 +577,13 @@ drawfire(void)
    {
       GLint t = glutGet(GLUT_ELAPSED_TIME);
       if (t - T0 >= 2000) {
-	 GLfloat seconds = (t - T0) / 1000.0;
-	 GLfloat fps = Frames / seconds;
-	 sprintf(frbuf, "Frame rate: %f", fps);
-	 printf("%s\n", frbuf);
-	 fflush(stdout);
-	 T0 = t;
-	 Frames = 0;
+         GLfloat seconds = (t - T0) / 1000.0;
+         GLfloat fps = Frames / seconds;
+         sprintf(frbuf, "Frame rate: %f", fps);
+         printf("%s\n", frbuf);
+         fflush(stdout);
+         T0 = t;
+         Frames = 0;
       }
    }
 
@@ -594,10 +594,10 @@ regen_texImage(void)
 {
    glBindTexture(GL_TEXTURE_2D, TexObj);
    glTexImage2D(GL_TEXTURE_2D, 0, TEXINTFORMAT, TexWidth, TexHeight, 0,
-		texFormats[texType], texTypes[texType], NULL);
+                texFormats[texType], texTypes[texType], NULL);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, MyFB);
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-			     GL_TEXTURE_2D, TexObj, 0);
+                             GL_TEXTURE_2D, TexObj, 0);
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
@@ -651,7 +651,7 @@ key(unsigned char key, int x, int y)
       break;
    case 'q':
       if (++texType > 16)
-	 texType = 0;
+         texType = 0;
       regen_texImage();
       break;
    case 'n':
@@ -681,7 +681,7 @@ inittextures(void)
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		   GL_LINEAR_MIPMAP_LINEAR);
+                   GL_LINEAR_MIPMAP_LINEAR);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -689,41 +689,39 @@ inittextures(void)
    glGenTextures(1, &treeid);
    glBindTexture(GL_TEXTURE_2D, treeid);
 
-   if (1)
-      {
-	 int w, h;
-	 GLenum format;
-	 int x, y;
-	 GLubyte *image = LoadRGBImage(DEMOS_DATA_DIR "tree3.rgb",
-				       &w, &h, &format);
+   if (1) {
+      int w, h;
+      GLenum format;
+      int x, y;
+      GLubyte *image = LoadRGBImage(DEMOS_DATA_DIR "tree3.rgb",
+                     &w, &h, &format);
 
-	 if (!image) {
-	    fprintf(stderr, "Error reading a texture.\n");
-	    exit(-1);
-	 }
-
-	 for (y = 0; y < 128; y++)
-	    for (x = 0; x < 128; x++) {
-	       tex[x][y][0] = image[(y + x * 128) * 3];
-	       tex[x][y][1] = image[(y + x * 128) * 3 + 1];
-	       tex[x][y][2] = image[(y + x * 128) * 3 + 2];
-	       if ((tex[x][y][0] == tex[x][y][1]) &&
-		   (tex[x][y][1] == tex[x][y][2]) && (tex[x][y][2] == 255))
-		  tex[x][y][3] = 0;
-	       else
-		  tex[x][y][3] = 255;
-	    }
-
-	 if ((gluerr = gluBuild2DMipmaps(GL_TEXTURE_2D, 4, 128, 128, GL_RGBA,
-					 GL_UNSIGNED_BYTE, (GLvoid *) (tex)))) {
-	    fprintf(stderr, "GLULib%s\n", (char *) gluErrorString(gluerr));
-	    exit(-1);
-	 }
+      if (!image) {
+         fprintf(stderr, "Error reading a texture.\n");
+         exit(-1);
       }
-   else {
+
+      for (y = 0; y < 128; y++)
+         for (x = 0; x < 128; x++) {
+            tex[x][y][0] = image[(y + x * 128) * 3];
+            tex[x][y][1] = image[(y + x * 128) * 3 + 1];
+            tex[x][y][2] = image[(y + x * 128) * 3 + 2];
+            if ((tex[x][y][0] == tex[x][y][1]) &&
+                (tex[x][y][1] == tex[x][y][2]) && (tex[x][y][2] == 255))
+               tex[x][y][3] = 0;
+            else
+               tex[x][y][3] = 255;
+         }
+
+      if ((gluerr = gluBuild2DMipmaps(GL_TEXTURE_2D, 4, 128, 128, GL_RGBA,
+                                       GL_UNSIGNED_BYTE, (GLvoid *) (tex)))) {
+         fprintf(stderr, "GLULib%s\n", (char *) gluErrorString(gluerr));
+         exit(-1);
+      }
+   } else {
       if (!LoadRGBMipmaps(DEMOS_DATA_DIR "tree2.rgba", GL_RGBA)) {
-	 fprintf(stderr, "Error reading a texture.\n");
-	 exit(-1);
+         fprintf(stderr, "Error reading a texture.\n");
+         exit(-1);
       }
    }
 
@@ -731,7 +729,7 @@ inittextures(void)
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		   GL_LINEAR_MIPMAP_LINEAR);
+                   GL_LINEAR_MIPMAP_LINEAR);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -745,12 +743,11 @@ inittree(void)
 
    for (i = 0; i < NUMTREE; i++)
       do {
-	 treepos[i][0] = vrnd() * TREEOUTR * 2.0 - TREEOUTR;
-	 treepos[i][1] = 0.0;
-	 treepos[i][2] = vrnd() * TREEOUTR * 2.0 - TREEOUTR;
-	 dist =
-	    sqrt(treepos[i][0] * treepos[i][0] +
-		 treepos[i][2] * treepos[i][2]);
+         treepos[i][0] = vrnd() * TREEOUTR * 2.0 - TREEOUTR;
+         treepos[i][1] = 0.0;
+         treepos[i][2] = vrnd() * TREEOUTR * 2.0 - TREEOUTR;
+         dist = sqrt(treepos[i][0] * treepos[i][0] +
+                     treepos[i][2] * treepos[i][2]);
       } while ((dist < TREEINR) || (dist > TREEOUTR));
 }
 
@@ -826,8 +823,8 @@ DrawCube(void)
       glBegin(GL_POLYGON);
       glNormal3f(0, 0, 1);
       for (j = 0; j < 4; j++) {
-	 glTexCoord2fv(texcoords[j]);
-	 glVertex2fv(vertices[j]);
+         glTexCoord2fv(texcoords[j]);
+         glVertex2fv(vertices[j]);
       }
       glEnd();
       glPopMatrix();
@@ -848,7 +845,7 @@ draw(void)
 
    glLightfv(GL_LIGHT0, GL_POSITION, pos);
    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL,
-		 GL_SEPARATE_SPECULAR_COLOR);
+                 GL_SEPARATE_SPECULAR_COLOR);
 
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
@@ -956,7 +953,7 @@ init_fbotexture(void)
    glBindTexture(GL_TEXTURE_2D, TexObj);
    /* make one image level. */
    glTexImage2D(GL_TEXTURE_2D, 0, TEXINTFORMAT, TexWidth, TexHeight, 0,
-		texFormats[texType], texTypes[texType], NULL);
+                texFormats[texType], texTypes[texType], NULL);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -968,7 +965,7 @@ init_fbotexture(void)
 
    /* Render color to texture */
    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-			     GL_TEXTURE_2D, TexObj, 0);
+                             GL_TEXTURE_2D, TexObj, 0);
    CheckError(__LINE__);
 
 
@@ -1028,10 +1025,10 @@ init(int argc, char *argv[])
 
    for ( i=1; i<argc; i++ ) {
       if (strcmp(argv[i], "-info")==0) {
-	 printf("GL_RENDERER   = %s\n", (char *) glGetString(GL_RENDERER));
-	 printf("GL_VERSION    = %s\n", (char *) glGetString(GL_VERSION));
-	 printf("GL_VENDOR     = %s\n", (char *) glGetString(GL_VENDOR));
-	 printf("GL_EXTENSIONS = %s\n", (char *) glGetString(GL_EXTENSIONS));
+         printf("GL_RENDERER   = %s\n", (char *) glGetString(GL_RENDERER));
+         printf("GL_VERSION    = %s\n", (char *) glGetString(GL_VERSION));
+         printf("GL_VENDOR     = %s\n", (char *) glGetString(GL_VENDOR));
+         printf("GL_EXTENSIONS = %s\n", (char *) glGetString(GL_EXTENSIONS));
       }
    }
 }

@@ -75,7 +75,7 @@ inittextures(void)
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		   GL_LINEAR_MIPMAP_NEAREST);
+                   GL_LINEAR_MIPMAP_NEAREST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
    glGenTextures(1, &t2id);
@@ -90,7 +90,7 @@ inittextures(void)
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		   GL_LINEAR_MIPMAP_LINEAR);
+                   GL_LINEAR_MIPMAP_LINEAR);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -105,46 +105,46 @@ drawobjs(const int *l, const float *f)
       float r = 0.33, g = 0.33, b = 0.33;
 
       for (; (*l) != 0;) {
-	 mend = *l++;
+         mend = *l++;
 
-	 r += 0.33;
-	 if (r > 1.0) {
-	    r = 0.33;
-	    g += 0.33;
-	    if (g > 1.0) {
-	       g = 0.33;
-	       b += 0.33;
-	       if (b > 1.0)
-		  b = 0.33;
-	    }
-	 }
+         r += 0.33;
+         if (r > 1.0) {
+            r = 0.33;
+            g += 0.33;
+            if (g > 1.0) {
+               g = 0.33;
+               b += 0.33;
+               if (b > 1.0)
+                  b = 0.33;
+            }
+         }
 
-	 glColor3f(r, g, b);
-	 glBegin(GL_TRIANGLE_STRIP);
-	 for (j = 0; j < mend; j++) {
-	    f += 4;
-	    glTexCoord2fv(f);
-	    f += 2;
-	    glVertex3fv(f);
-	    f += 3;
-	 }
-	 glEnd();
+         glColor3f(r, g, b);
+         glBegin(GL_TRIANGLE_STRIP);
+         for (j = 0; j < mend; j++) {
+            f += 4;
+            glTexCoord2fv(f);
+            f += 2;
+            glVertex3fv(f);
+            f += 3;
+         }
+         glEnd();
       }
    }
    else
       for (; (*l) != 0;) {
-	 mend = *l++;
+         mend = *l++;
 
-	 glBegin(GL_TRIANGLE_STRIP);
-	 for (j = 0; j < mend; j++) {
-	    glColor4fv(f);
-	    f += 4;
-	    glTexCoord2fv(f);
-	    f += 2;
-	    glVertex3fv(f);
-	    f += 3;
-	 }
-	 glEnd();
+         glBegin(GL_TRIANGLE_STRIP);
+         for (j = 0; j < mend; j++) {
+            glColor4fv(f);
+            f += 4;
+            glTexCoord2fv(f);
+            f += 2;
+            glVertex3fv(f);
+            f += 3;
+         }
+         glEnd();
       }
 }
 
@@ -229,12 +229,12 @@ key(unsigned char k, int x, int y)
       break;
    case 'b':
       if (bfcull) {
-	 glDisable(GL_CULL_FACE);
-	 bfcull = 0;
+         glDisable(GL_CULL_FACE);
+         bfcull = 0;
       }
       else {
-	 glEnable(GL_CULL_FACE);
-	 bfcull = 1;
+         glEnable(GL_CULL_FACE);
+         bfcull = 1;
       }
       break;
    case 'm':
@@ -311,10 +311,10 @@ printhelp(void)
    glRasterPos2i(60, 150);
    if (joyavailable)
       printstring(GLUT_BITMAP_TIMES_ROMAN_24,
-		  "j - Toggle jostick control (Joystick control available)");
+                  "j - Toggle jostick control (Joystick control available)");
    else
       printstring(GLUT_BITMAP_TIMES_ROMAN_24,
-		  "(No Joystick control available)");
+                  "(No Joystick control available)");
 }
 
 static void
@@ -332,28 +332,28 @@ dojoy(void)
       joyavailable = 1;
 
       if (max[0] < joy.wXpos)
-	 max[0] = joy.wXpos;
+         max[0] = joy.wXpos;
       if (min[0] > joy.wXpos)
-	 min[0] = joy.wXpos;
+         min[0] = joy.wXpos;
       center[0] = (max[0] + min[0]) / 2;
 
       if (max[1] < joy.wYpos)
-	 max[1] = joy.wYpos;
+         max[1] = joy.wYpos;
       if (min[1] > joy.wYpos)
-	 min[1] = joy.wYpos;
+         min[1] = joy.wYpos;
       center[1] = (max[1] + min[1]) / 2;
 
       if (joyactive) {
-	 if (fabs(center[0] - (float) joy.wXpos) > 0.1 * (max[0] - min[0]))
-	    alpha -=
-	       2.0 * (center[0] - (float) joy.wXpos) / (max[0] - min[0]);
-	 if (fabs(center[1] - (float) joy.wYpos) > 0.1 * (max[1] - min[1]))
-	    beta += 2.0 * (center[1] - (float) joy.wYpos) / (max[1] - min[1]);
+         if (fabs(center[0] - (float) joy.wXpos) > 0.1 * (max[0] - min[0]))
+            alpha -=
+               2.0 * (center[0] - (float) joy.wXpos) / (max[0] - min[0]);
+         if (fabs(center[1] - (float) joy.wYpos) > 0.1 * (max[1] - min[1]))
+            beta += 2.0 * (center[1] - (float) joy.wYpos) / (max[1] - min[1]);
 
-	 if (joy.wButtons & JOY_BUTTON1)
-	    v += 0.01;
-	 if (joy.wButtons & JOY_BUTTON2)
-	    v -= 0.01;
+         if (joy.wButtons & JOY_BUTTON1)
+            v += 0.01;
+         if (joy.wButtons & JOY_BUTTON2)
+            v -= 0.01;
       }
    }
    else
@@ -392,8 +392,8 @@ draw(void)
    glPushMatrix();
    calcposobs();
    gluLookAt(obs[0], obs[1], obs[2],
-	     obs[0] + dir[0], obs[1] + dir[1], obs[2] + dir[2],
-	     0.0, 0.0, 1.0);
+             obs[0] + dir[0], obs[1] + dir[1], obs[2] + dir[2],
+             0.0, 0.0, 1.0);
 
    if (dir[0] > 0) {
       offset = 8.0;
@@ -435,7 +435,7 @@ draw(void)
    printstring(GLUT_BITMAP_HELVETICA_18, frbuf);
    glRasterPos2i(350, 470);
    printstring(GLUT_BITMAP_HELVETICA_10,
-	       "Tunnel V1.5 Written by David Bucciarelli (tech.hmw@plus.it)");
+               "Tunnel V1.5 Written by David Bucciarelli (tech.hmw@plus.it)");
 
    if (help)
       printhelp();
@@ -475,7 +475,7 @@ main(int ac, char **av)
    float fogcolor[4] = { 0.7, 0.7, 0.7, 1.0 };
 
    fprintf(stderr,
-	   "Tunnel V1.5\nWritten by David Bucciarelli (tech.hmw@plus.it)\n");
+           "Tunnel V1.5\nWritten by David Bucciarelli (tech.hmw@plus.it)\n");
 
    glutInitWindowSize(WIDTH, HEIGHT);
    glutInit(&ac, av);
