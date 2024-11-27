@@ -126,7 +126,7 @@ build-mingw:
     - .build
   variables:
     EXTRA_OPTION: >
-      --cross-file=.gitlab-ci/x86_64-w64-mingw32
+      --cross-file=.gitlab-ci/i686-w64-mingw32
       -Degl=disabled
       -Dgles1=disabled
       -Dgles2=disabled
