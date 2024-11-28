@@ -1,6 +1,6 @@
 [wrap-git]
 url = https://gitlab.freedesktop.org/libdecor/libdecor.git
-revision = bb2ec856aa2ffe30530d6b655d9accec53bbf87d
+revision = 0.2.2
 depth = 1
 
 [provide]
