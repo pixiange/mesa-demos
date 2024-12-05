@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
       goto close_fd;
    }
 
-   dpy = eglGetDisplay(gbm);
+   dpy = eglGetDisplay((EGLNativeDisplayType) gbm);
    if (dpy == EGL_NO_DISPLAY) {
       fprintf(stderr, "eglGetDisplay() failed\n");
       ret = -1;
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
    gs = gbm_surface_create(gbm, kms.mode.hdisplay, kms.mode.vdisplay,
 			   GBM_BO_FORMAT_XRGB8888,
 			   GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-   surface = eglCreateWindowSurface(dpy, config, gs, NULL);
+   surface = eglCreateWindowSurface(dpy, config, (EGLNativeWindowType) gs, NULL);
 
    if (!eglMakeCurrent(dpy, surface, surface, ctx)) {
       fprintf(stderr, "failed to make context current\n");
