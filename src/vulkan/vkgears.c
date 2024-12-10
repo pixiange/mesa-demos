@@ -130,7 +130,7 @@ current_time(void)
 }
 
 static void
-init_vk(const char *extension)
+init_vk(const char *wsi_extension)
 {
    uint32_t api_version = VK_API_VERSION_1_0;
 
@@ -140,19 +140,57 @@ init_vk(const char *extension)
    if (res == VK_SUCCESS && instance_version >= VK_API_VERSION_1_1)
       api_version = VK_API_VERSION_1_1;
 
+   VkInstanceCreateFlags instance_flags = 0;
+
+   // Instance extensions to use
+   const char *inst_exts[3];
+
+   // Look for optional instance extensions
+   uint32_t inst_ext_props_count = 0;
+   res = vkEnumerateInstanceExtensionProperties(NULL, &inst_ext_props_count, NULL);
+   if (res != VK_SUCCESS)
+      error("Failed to get instance extensions properties count");
+
+   VkExtensionProperties *inst_ext_props =
+      calloc(inst_ext_props_count, sizeof(VkExtensionProperties));
+   if (!inst_ext_props)
+      error("Failed to allocate extension properties");
+
+   res = vkEnumerateInstanceExtensionProperties(NULL, &inst_ext_props_count, inst_ext_props);
+   if (res != VK_SUCCESS)
+      error("Failed to get instance extensions properties");
+
+   uint32_t count = 0;
+   for (uint32_t i = 0; i < inst_ext_props_count; ++i) {
+      if (!strcmp(inst_ext_props[i].extensionName, 
+                  VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME)) {
+         inst_exts[count++] = 
+            VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME;
+         instance_flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+      }
+   }
+
+   free(inst_ext_props);
+
+   if (wsi_extension) {
+      /* Requires a WSI extension, add it and the base extension 
+       * VK_KHR_SURFACE_EXTENSION_NAME
+       */
+      inst_exts[count++] = VK_KHR_SURFACE_EXTENSION_NAME;
+      inst_exts[count++] = wsi_extension;
+   }
+
    res = vkCreateInstance(
       &(VkInstanceCreateInfo) {
          .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+         .flags = instance_flags,
          .pApplicationInfo = &(VkApplicationInfo) {
             .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
             .pApplicationName = "vkgears",
             .apiVersion = api_version,
          },
-         .enabledExtensionCount = extension ? 2 : 0,
-         .ppEnabledExtensionNames = (const char *[2]) {
-            VK_KHR_SURFACE_EXTENSION_NAME,
-            extension,
-         },
+         .enabledExtensionCount = count,
+         .ppEnabledExtensionNames = inst_exts,
       },
       NULL,
       &instance);
@@ -160,7 +198,6 @@ init_vk(const char *extension)
    if (res != VK_SUCCESS)
       error("Failed to create Vulkan instance.\n");
 
-   uint32_t count;
    res = vkEnumeratePhysicalDevices(instance, &count, NULL);
    if (res != VK_SUCCESS || count == 0)
       error("No Vulkan devices found.\n");
