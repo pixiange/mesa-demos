@@ -35,6 +35,11 @@
 #define GL_GLEXT_PROTOTYPES
 #define EGL_EGLEXT_PROTOTYPES
 
+#ifdef __APPLE__
+#include <GL/gl.h>
+#include <GL/glext.h>
+#endif
+
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
