@@ -201,11 +201,11 @@ static void setupConvolution(void)
       vecKer[i*4 + 3] = kernel[i];
    }
 
-   loc = glGetUniformLocationARB(program, "KernelValue");
+   loc = glGetUniformLocation(program, "KernelValue");
    glUniform4fv(loc, 9, vecKer);
-   loc = glGetUniformLocationARB(program, "ScaleFactor");
+   loc = glGetUniformLocation(program, "ScaleFactor");
    glUniform4f(loc, scale, scale, scale, scale);
-   loc = glGetUniformLocationARB(program, "BaseColor");
+   loc = glGetUniformLocation(program, "BaseColor");
    glUniform4f(loc, baseColor[0], baseColor[1],
                baseColor[2], baseColor[3]);
 
@@ -244,8 +244,8 @@ static void createProgram(const char *vertProgFile,
 
    checkError(__LINE__);
    {/*texture*/
-      GLuint texLoc = glGetUniformLocationARB(program, "srcTex");
-      glUniform1iARB(texLoc, 0);
+      GLuint texLoc = glGetUniformLocation(program, "srcTex");
+      glUniform1i(texLoc, 0);
    }
    {/*setup offsets */
       float offsets[] = { 1.0 / texture.width,  1.0 / texture.height,
@@ -257,7 +257,7 @@ static void createProgram(const char *vertProgFile,
                           1.0 / texture.width, -1.0 / texture.height,
                           0.0                , -1.0 / texture.height,
                           -1.0 / texture.width, -1.0 / texture.height };
-      GLuint offsetLoc = glGetUniformLocationARB(program, "Offset");
+      GLuint offsetLoc = glGetUniformLocation(program, "Offset");
       glUniform2fv(offsetLoc, 9, offsets);
    }
    setupConvolution();

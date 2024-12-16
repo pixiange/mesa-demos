@@ -108,9 +108,9 @@ static void check_link(GLuint prog)
 static void setup_uniforms(void)
 {
    {
-      GLint loc1f = glGetUniformLocationARB(program, "Offset1f");
-      GLint loc2f = glGetUniformLocationARB(program, "Offset2f");
-      GLint loc4f = glGetUniformLocationARB(program, "Offset4f");
+      GLint loc1f = glGetUniformLocation(program, "Offset1f");
+      GLint loc2f = glGetUniformLocation(program, "Offset2f");
+      GLint loc4f = glGetUniformLocation(program, "Offset4f");
       GLfloat vecKer[] =
          { 1.0, 0.0, 0.0,  1.0,
            0.0, 1.0, 0.0,  1.0,
@@ -129,14 +129,14 @@ static void setup_uniforms(void)
    }
 
    {
-      GLint loci = glGetUniformLocationARB(program, "KernelSizeInt");
+      GLint loci = glGetUniformLocation(program, "KernelSizeInt");
       if (loci >= 0)
          glUniform1i(loci, 4);
    }
    {
-      GLint loc1f = glGetUniformLocationARB(program, "KernelValue1f");
-      GLint loc2f = glGetUniformLocationARB(program, "KernelValue2f");
-      GLint loc4f = glGetUniformLocationARB(program, "KernelValue4f");
+      GLint loc1f = glGetUniformLocation(program, "KernelValue1f");
+      GLint loc2f = glGetUniformLocation(program, "KernelValue2f");
+      GLint loc4f = glGetUniformLocation(program, "KernelValue4f");
       GLfloat vecKer[] =
          { 1.0, 0.0, 0.0,  0.25,
            0.0, 1.0, 0.0,  0.25,
@@ -158,8 +158,8 @@ static void setup_uniforms(void)
    }
 
    {
-      GLint tex1 = glGetUniformLocationARB(program, "tex1");
-      GLint tex2 = glGetUniformLocationARB(program, "tex2");
+      GLint tex1 = glGetUniformLocation(program, "tex1");
+      GLint tex2 = glGetUniformLocation(program, "tex2");
       if (tex1 >= 0)
          glUniform1i(tex1, 0);
       if (tex2 >= 0)
