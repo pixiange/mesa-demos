@@ -130,6 +130,7 @@ build-mingw:
       -Degl=disabled
       -Dgles1=disabled
       -Dgles2=disabled
+      -Dglvnd=disabled
       -Dlibdrm=disabled
       -Dosmesa=disabled
       -Dvulkan=disabled
