@@ -178,6 +178,10 @@ if cc.has_function('sincos', prefix: '#define _GNU_SOURCE\n#include <math.h>',
   add_project_arguments('-DHAVE_SINCOS', language: 'c')
 endif
 
+if cc.check_header('sys/time.h')
+  add_project_arguments('-DHAVE_SYS_TIME_H', language: 'c')
+endif
+
 if ['linux', 'cygwin', 'gnu', 'freebsd', 'gnu/kfreebsd', 'haiku', 'android'].contains(host_machine.system())
   add_project_arguments(['-D_GNU_SOURCE', '-D_XOPEN_SOURCE=500'], language: ['c', 'cpp'])
 elif host_machine.system() == 'windows'

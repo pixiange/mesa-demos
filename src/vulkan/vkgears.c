@@ -30,7 +30,9 @@
 #include <string.h>
 #include <math.h>
 
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
 
 #include <vulkan/vulkan.h>
 
@@ -121,6 +123,8 @@ error(const char *format, ...)
    va_end(args);
 }
 
+#if HAVE_SYS_TIME_H
+
 static double
 current_time(void)
 {
@@ -128,6 +132,12 @@ current_time(void)
    (void) gettimeofday(&tv, NULL );
    return (double) tv.tv_sec + tv.tv_usec / 1000000.0;
 }
+
+#endif
+
+#error "no current_time implementation"
+
+#endif
 
 static void
 init_vk(const char *wsi_extension)
