@@ -50,7 +50,13 @@ if is_macos
   )
 endif
 
-if (dep_wayland.found() or dep_xcb.found() or is_macos) and prog_glslang.found()
+is_windows = host_machine.system() == 'windows'
+if is_windows
+  args += ['-DWIN32_SUPPORT']
+  sources += files('wsi/win32.c')
+endif
+
+if (dep_wayland.found() or dep_xcb.found() or is_macos or is_windows) and prog_glslang.found()
   _gen = generator(
     prog_glslang,
     output : '@PLAINNAME@.spv.h',

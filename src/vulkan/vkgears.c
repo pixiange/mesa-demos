@@ -32,6 +32,8 @@
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#elif defined(_WIN32)
+#include <windows.h>
 #endif
 
 #include <vulkan/vulkan.h>
@@ -133,7 +135,15 @@ current_time(void)
    return (double) tv.tv_sec + tv.tv_usec / 1000000.0;
 }
 
-#endif
+#elif defined(_WIN32)
+
+static double
+current_time(void)
+{
+   return GetTickCount() / 1000.0;
+}
+
+#else
 
 #error "no current_time implementation"
 

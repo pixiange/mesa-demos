@@ -39,5 +39,7 @@ get_wsi_interface(void)
    return xcb_wsi_interface();
 #elif defined(METAL_SUPPORT)
    return metal_wsi_interface();
+#elif defined(WIN32_SUPPORT)
+   return win32_wsi_interface();
 #endif
 }
