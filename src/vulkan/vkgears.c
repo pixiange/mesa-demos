@@ -198,11 +198,11 @@ init_vk(const char *wsi_extension)
       &instance);
 
    if (res != VK_SUCCESS)
-      error("Failed to create Vulkan instance.\n");
+      error("Failed to create Vulkan instance.");
 
    res = vkEnumeratePhysicalDevices(instance, &count, NULL);
    if (res != VK_SUCCESS || count == 0)
-      error("No Vulkan devices found.\n");
+      error("No Vulkan devices found.");
 
    VkPhysicalDevice pd[count];
    res = vkEnumeratePhysicalDevices(instance, &count, pd);
@@ -237,7 +237,7 @@ init_vk(const char *wsi_extension)
       &device);
 
    if (res != VK_SUCCESS)
-      error("Failed to create Vulkan device.\n");
+      error("Failed to create Vulkan device.");
 
    vkGetDeviceQueue(device, 0, 0, &queue);
 
