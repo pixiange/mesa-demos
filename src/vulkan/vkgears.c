@@ -577,14 +577,6 @@ create_swapchain()
          .presentMode = present_mode,
       }, NULL, &swapchain);
 
-   vkGetSwapchainImagesKHR(device, swapchain,
-                           &image_count, NULL);
-   assert(image_count > 0);
-   VkImage swapchain_images[image_count];
-   vkGetSwapchainImagesKHR(device, swapchain,
-                           &image_count, swapchain_images);
-
-
    int res;
    if (sample_count != VK_SAMPLE_COUNT_1_BIT) {
        res = create_image(image_format,
@@ -660,6 +652,17 @@ create_swapchain()
 
    int attachment_count = sample_count != VK_SAMPLE_COUNT_1_BIT ? 3 : 2;
 
+   vkGetSwapchainImagesKHR(device, swapchain,
+                           &image_count, NULL);
+   assert(image_count > 0);
+
+   VkImage *swapchain_images = calloc(image_count, sizeof(VkImage));
+   if (!swapchain_images)
+      error("Failed to allocate array for swapchain images.");
+
+   vkGetSwapchainImagesKHR(device, swapchain,
+                           &image_count, swapchain_images);
+
    for (uint32_t i = 0; i < image_count; i++) {
       image_data[i].image = swapchain_images[i];
       vkCreateImageView(device,
@@ -702,6 +705,8 @@ create_swapchain()
          NULL,
          &image_data[i].framebuffer);
    }
+
+   free(swapchain_images);
 
    for (uint32_t i = 0; i < MAX_CONCURRENT_FRAMES; ++i) {
       vkCreateFence(device,
