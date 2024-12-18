@@ -210,11 +210,10 @@ init_vk(const char *wsi_extension)
 
    vkGetPhysicalDeviceMemoryProperties(physical_device, &mem_props);
 
-   vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, NULL);
-   assert(count > 0);
-   VkQueueFamilyProperties props[count];
-   vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, props);
-   assert(props[0].queueFlags & VK_QUEUE_GRAPHICS_BIT);
+   count = 1;
+   VkQueueFamilyProperties props;
+   vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, &props);
+   assert(props.queueFlags & VK_QUEUE_GRAPHICS_BIT);
 
    res = vkCreateDevice(physical_device,
       &(VkDeviceCreateInfo) {
