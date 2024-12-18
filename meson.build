@@ -217,6 +217,8 @@ else
     # Clang
     '-Wno-microsoft-enum-value',
     '-Wno-unused-function',
+    # MSVC compatibility
+    '-Werror=vla',
   ])
 
   if host_machine.system() != 'darwin'
