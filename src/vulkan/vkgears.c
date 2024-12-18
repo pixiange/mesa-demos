@@ -523,7 +523,12 @@ configure_swapchain()
 
    vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface,
                                         &count, NULL);
-   VkSurfaceFormatKHR surface_formats[count];
+
+   VkSurfaceFormatKHR *surface_formats = calloc(count,
+                                                sizeof(VkSurfaceFormatKHR));
+   if (!surface_formats)
+      error("Failed to allocate array for surface formats");
+
    vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface,
                                         &count, surface_formats);
    image_format = surface_formats[0].format;
@@ -536,6 +541,8 @@ configure_swapchain()
          break;
       }
    }
+
+   free(surface_formats);
 
    /* either VK_FORMAT_D32_SFLOAT or VK_FORMAT_X8_D24_UNORM_PACK32 needs to
     * be supported; find out which one
