@@ -490,7 +490,11 @@ configure_swapchain()
    uint32_t count;
    vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface,
                                              &count, NULL);
-   VkPresentModeKHR present_modes[count];
+
+   VkPresentModeKHR *present_modes = calloc(count, sizeof(VkPresentModeKHR));
+   if (!present_modes)
+      error("Failed to allocate array for present modes.");
+
    vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface,
                                              &count, present_modes);
    int i;
@@ -501,6 +505,8 @@ configure_swapchain()
          break;
       }
    }
+
+   free(present_modes);
 
    min_image_count = 2;
    if (min_image_count < surface_caps.minImageCount) {
