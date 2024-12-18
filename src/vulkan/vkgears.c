@@ -200,14 +200,13 @@ init_vk(const char *wsi_extension)
    if (res != VK_SUCCESS)
       error("Failed to create Vulkan instance.");
 
-   res = vkEnumeratePhysicalDevices(instance, &count, NULL);
-   if (res != VK_SUCCESS || count == 0)
-      error("No Vulkan devices found.");
+   count = 1;
+   res = vkEnumeratePhysicalDevices(instance, &count, &physical_device);
+   if (res != VK_SUCCESS && res != VK_INCOMPLETE)
+      error("Failed to enumerate physical devices.");
 
-   VkPhysicalDevice pd[count];
-   res = vkEnumeratePhysicalDevices(instance, &count, pd);
-   assert(res == VK_SUCCESS);
-   physical_device = pd[0];
+   if (count == 0)
+      error("No Vulkan devices found.");
 
    vkGetPhysicalDeviceMemoryProperties(physical_device, &mem_props);
 
