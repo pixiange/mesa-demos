@@ -651,9 +651,9 @@ parse_geometry(const char *str, int *x, int *y, unsigned int *w, unsigned int *h
       *w = tw;
    if (th < LONG_MAX)
       *h = th;
-   if (tx < INT_MAX)
+   if (tx < LONG_MAX)
       *x = tx;
-   if (ty < INT_MAX)
+   if (ty < LONG_MAX)
       *y = ty;
 }
 
