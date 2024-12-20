@@ -690,7 +690,10 @@ main(int argc, char *argv[])
    }
 
    make_window("wglgears", x, y, winWidth, winHeight);
-   reshape(winWidth, winHeight);
+
+   GetClientRect(hWnd, &winrect);
+   reshape(winrect.right - winrect.left, winrect.bottom - winrect.top);
+
    query_vsync();
 
    if (printInfo) {
