@@ -421,17 +421,6 @@ make_window(const char *name, int x, int y, int width, int height)
                          winrect.bottom - winrect.top,
                          NULL, NULL, hInst, NULL);
 
-   if (fullscreen) {
-      DEVMODE devmode;
-      memset(&devmode, 0, sizeof(DEVMODE));
-      devmode.dmSize = sizeof(DEVMODE);
-      devmode.dmPelsWidth = width;
-      devmode.dmPelsHeight = height;
-      devmode.dmBitsPerPel = 24;
-      devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-      ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
-   }
-
    hDC = GetDC(hWnd);
    pixelFormat = ChoosePixelFormat(hDC, &pfd);
    if (!pixelFormat)
