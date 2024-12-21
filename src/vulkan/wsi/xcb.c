@@ -81,14 +81,21 @@ init_display()
    xkb_x11_setup_xkb_extension(connection,
                                XKB_X11_MIN_MAJOR_XKB_VERSION,
                                XKB_X11_MIN_MINOR_XKB_VERSION,
-                               XKB_X11_SETUP_XKB_EXTENSION_NO_FLAGS, NULL,NULL,
+                               XKB_X11_SETUP_XKB_EXTENSION_NO_FLAGS,
+                               NULL, NULL,
                                &base_event_out, &base_error_out);
 
    keyboard_data.xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
    int32_t keyboard_dev_id = xkb_x11_get_core_keyboard_device_id(connection);
    if (keyboard_dev_id >= 0) {
-      keyboard_data.xkb_keymap = xkb_x11_keymap_new_from_device(keyboard_data.xkb_context, connection, keyboard_dev_id, XKB_KEYMAP_COMPILE_NO_FLAGS);
-      keyboard_data.xkb_state = xkb_x11_state_new_from_device(keyboard_data.xkb_keymap, connection, keyboard_dev_id);
+      keyboard_data.xkb_keymap =
+         xkb_x11_keymap_new_from_device(keyboard_data.xkb_context, connection,
+                                        keyboard_dev_id,
+                                        XKB_KEYMAP_COMPILE_NO_FLAGS);
+
+      keyboard_data.xkb_state =
+         xkb_x11_state_new_from_device(keyboard_data.xkb_keymap, connection,
+                                       keyboard_dev_id);
    }
 }
 
@@ -134,7 +141,8 @@ init_window(const char *title, int width, int height, bool fullscreen)
                        1, &delete_atom);
 
    if (fullscreen) {
-       xcb_atom_t fullscreen_atom = get_atom(connection, "_NET_WM_STATE_FULLSCREEN");
+       xcb_atom_t fullscreen_atom =
+         get_atom(connection, "_NET_WM_STATE_FULLSCREEN");
        xcb_change_property(connection,
                            XCB_PROP_MODE_REPLACE,
                            window,
@@ -162,7 +170,8 @@ update_window()
    while(event.generic) {
       switch (event.generic->response_type & 0x7f) {
       case XCB_CONFIGURE_NOTIFY:
-         wsi_callbacks.resize(event.configure_event->width, event.configure_event->height);
+         wsi_callbacks.resize(event.configure_event->width,
+                              event.configure_event->height);
          break;
 
       case XCB_CLIENT_MESSAGE:
@@ -173,7 +182,9 @@ update_window()
          break;
       case XCB_KEY_PRESS:
       case XCB_KEY_RELEASE: {
-         xkb_keysym_t sym = xkb_state_key_get_one_sym(keyboard_data.xkb_state, event.key_press->detail);
+         xkb_keysym_t sym =
+            xkb_state_key_get_one_sym(keyboard_data.xkb_state,
+                                      event.key_press->detail);
          enum wsi_key wsi_key = WSI_KEY_OTHER;
          switch (sym) {
          case XKB_KEY_Escape:
@@ -196,7 +207,8 @@ update_window()
             wsi_key = WSI_KEY_A;
             break;
          }
-         wsi_callbacks.key_press(event.generic->response_type == XCB_KEY_PRESS, wsi_key);
+         wsi_callbacks.key_press(event.generic->response_type == XCB_KEY_PRESS,
+                                 wsi_key);
          break;
       }
       break;

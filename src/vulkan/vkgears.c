@@ -147,7 +147,8 @@ init_vk(const char *wsi_extension)
 
    // Look for optional instance extensions
    uint32_t inst_ext_props_count = 0;
-   res = vkEnumerateInstanceExtensionProperties(NULL, &inst_ext_props_count, NULL);
+   res = vkEnumerateInstanceExtensionProperties(NULL, &inst_ext_props_count,
+                                                NULL);
    if (res != VK_SUCCESS)
       error("Failed to get instance extensions properties count");
 
@@ -156,7 +157,8 @@ init_vk(const char *wsi_extension)
    if (!inst_ext_props)
       error("Failed to allocate extension properties");
 
-   res = vkEnumerateInstanceExtensionProperties(NULL, &inst_ext_props_count, inst_ext_props);
+   res = vkEnumerateInstanceExtensionProperties(NULL, &inst_ext_props_count,
+                                                inst_ext_props);
    if (res != VK_SUCCESS)
       error("Failed to get instance extensions properties");
 
@@ -270,7 +272,8 @@ find_memory_type(const VkMemoryRequirements *reqs,
 }
 
 static int
-image_allocate(VkImage image, VkMemoryRequirements reqs, int memory_type, VkDeviceMemory *image_memory)
+image_allocate(VkImage image, VkMemoryRequirements reqs, int memory_type,
+               VkDeviceMemory *image_memory)
 {
    int res = vkAllocateMemory(device,
       &(VkMemoryAllocateInfo) {
@@ -435,10 +438,13 @@ create_render_pass()
                /* depth buffer is shared between swapchain images */
                .srcSubpass = VK_SUBPASS_EXTERNAL,
                .dstSubpass = 0,
-               .srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-               .dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+               .srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+                               VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+               .dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+                               VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
                .srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
-               .dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+               .dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT |
+                                VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
                .dependencyFlags = 0,
             },
             {
@@ -448,7 +454,8 @@ create_render_pass()
                .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                .srcAccessMask = 0,
-               .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT,
+               .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT |
+                                VK_ACCESS_COLOR_ATTACHMENT_READ_BIT,
                .dependencyFlags = 0,
             },
             {
@@ -458,7 +465,8 @@ create_render_pass()
                .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                .srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-               .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+               .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT |
+                                VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
                .dependencyFlags = 0,
             },
          },
@@ -525,11 +533,15 @@ configure_swapchain()
       }
    }
 
-   // either VK_FORMAT_D32_SFLOAT or VK_FORMAT_X8_D24_UNORM_PACK32 needs to be supported; find out which one
+   /* either VK_FORMAT_D32_SFLOAT or VK_FORMAT_X8_D24_UNORM_PACK32 needs to
+    * be supported; find out which one
+    */
    VkFormatProperties props;
-   vkGetPhysicalDeviceFormatProperties(physical_device, VK_FORMAT_D32_SFLOAT, &props);
-   depth_format = (props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) ?
-      VK_FORMAT_D32_SFLOAT : VK_FORMAT_X8_D24_UNORM_PACK32;
+   vkGetPhysicalDeviceFormatProperties(physical_device, VK_FORMAT_D32_SFLOAT,
+                                       &props);
+   depth_format = (props.optimalTilingFeatures &
+                   VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) ?
+                  VK_FORMAT_D32_SFLOAT : VK_FORMAT_X8_D24_UNORM_PACK32;
 }
 
 static void
@@ -571,25 +583,29 @@ create_swapchain()
             .depth = 1,
          },
          sample_count,
-         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
+         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+         VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
          &color_msaa);
       if (res)
          error("Failed to create resolve image");
 
       VkMemoryRequirements msaa_reqs;
       vkGetImageMemoryRequirements(device, color_msaa, &msaa_reqs);
-      int memory_type = find_memory_type(&msaa_reqs, VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT);
+      int memory_type =
+         find_memory_type(&msaa_reqs, VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT);
       if (memory_type < 0) {
-         memory_type = find_memory_type(&msaa_reqs, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+         memory_type =
+            find_memory_type(&msaa_reqs, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
          if (memory_type < 0)
             error("find_memory_type failed");
       }
-      res = image_allocate(color_msaa, msaa_reqs, memory_type, &color_msaa_memory);
+      res = image_allocate(color_msaa, msaa_reqs, memory_type,
+                           &color_msaa_memory);
       if (res)
          error("Failed to allocate memory for the resolve image");
 
-      res = create_image_view(color_msaa, image_format, VK_IMAGE_ASPECT_COLOR_BIT,
-                                        &color_msaa_view);
+      res = create_image_view(color_msaa, image_format,
+                              VK_IMAGE_ASPECT_COLOR_BIT, &color_msaa_view);
 
       if (res)
          error("Failed to create the image view for the resolve image");
@@ -602,7 +618,8 @@ create_swapchain()
          .depth = 1,
       },
       sample_count,
-      VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
+      VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
+      VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
       &depth_image);
 
    if (res)
@@ -610,9 +627,11 @@ create_swapchain()
 
    VkMemoryRequirements depth_reqs;
    vkGetImageMemoryRequirements(device, depth_image, &depth_reqs);
-   int memory_type = find_memory_type(&depth_reqs, VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT);
+   int memory_type =
+      find_memory_type(&depth_reqs, VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT);
    if (memory_type < 0) {
-      memory_type = find_memory_type(&depth_reqs, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+      memory_type =
+         find_memory_type(&depth_reqs, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
       if (memory_type < 0)
          error("find_memory_type failed");
    }
@@ -1093,7 +1112,8 @@ init_gears()
             }
          },
          .pInputAssemblyState = &(VkPipelineInputAssemblyStateCreateInfo) {
-            .sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+            .sType =
+               VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
             .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,
             .primitiveRestartEnable = false,
          },
@@ -1158,21 +1178,25 @@ init_gears()
    float verts[MAX_VERTS * GEAR_VERTEX_STRIDE];
 
    gears[0].first_vertex = 0;
-   gears[0].vertex_count = create_gear(verts + gears[0].first_vertex * GEAR_VERTEX_STRIDE,
+   gears[0].vertex_count = create_gear(verts + gears[0].first_vertex *
+                                       GEAR_VERTEX_STRIDE,
                                        1.0, 4.0, 1.0, 20, 0.7);
    gears[1].first_vertex = gears[0].first_vertex + gears[0].vertex_count;
-   gears[1].vertex_count = create_gear(verts + gears[1].first_vertex * GEAR_VERTEX_STRIDE,
+   gears[1].vertex_count = create_gear(verts + gears[1].first_vertex *
+                                       GEAR_VERTEX_STRIDE,
                                        0.5, 2.0, 2.0, 10, 0.7);
    gears[2].first_vertex = gears[1].first_vertex + gears[1].vertex_count;
-   gears[2].vertex_count = create_gear(verts + gears[2].first_vertex * GEAR_VERTEX_STRIDE,
+   gears[2].vertex_count = create_gear(verts + gears[2].first_vertex *
+                                       GEAR_VERTEX_STRIDE,
                                        1.3, 2.0, 0.5, 10, 0.7);
 
    unsigned num_verts = gears[2].first_vertex + gears[2].vertex_count;
    unsigned mem_size = sizeof(float) * GEAR_VERTEX_STRIDE * num_verts;
    vertex_offset = 0;
    normals_offset = sizeof(float) * 3;
-   ubo_buffer = create_buffer(sizeof(struct ubo), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT |
-                                                  VK_BUFFER_USAGE_TRANSFER_DST_BIT);
+   ubo_buffer = create_buffer(sizeof(struct ubo),
+                              VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT |
+                              VK_BUFFER_USAGE_TRANSFER_DST_BIT);
    vertex_buffer = create_buffer(mem_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 
    ubo_mem = allocate_buffer_mem(ubo_buffer, sizeof(struct ubo));
@@ -1253,7 +1277,8 @@ draw_gear(VkCommandBuffer cmdbuf, const float view[16],
    struct push_constants push_constants;
    mat4_identity(push_constants.modelview);
    mat4_multiply(push_constants.modelview, modelview);
-   memcpy(push_constants.material_color, material_color, sizeof(push_constants.material_color));
+   memcpy(push_constants.material_color, material_color,
+          sizeof(push_constants.material_color));
 
    vkCmdPushConstants(cmdbuf, pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT,
                       0, sizeof(push_constants), &push_constants);
@@ -1599,14 +1624,15 @@ main(int argc, char *argv[])
 
       static uint32_t frame_index;
       assert(frame_index < ARRAY_SIZE(frame_data));
-      vkWaitForFences(device, 1, &frame_data[frame_index].fence, VK_TRUE, UINT64_MAX);
+      vkWaitForFences(device, 1, &frame_data[frame_index].fence, VK_TRUE,
+                      UINT64_MAX);
       vkResetFences(device, 1, &frame_data[frame_index].fence);
 
       uint32_t image_index;
       VkResult result =
          vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
-                               frame_data[frame_index].semaphore, VK_NULL_HANDLE,
-                               &image_index);
+                               frame_data[frame_index].semaphore,
+                               VK_NULL_HANDLE, &image_index);
       if (result == VK_SUBOPTIMAL_KHR ||
           width != new_width || height != new_height) {
          recreate_swapchain();
@@ -1647,7 +1673,8 @@ main(int argc, char *argv[])
          0, 0,
          ubo_buffer, 0, sizeof(ubo));
 
-      vkCmdUpdateBuffer(frame_data[frame_index].cmd_buffer, ubo_buffer, 0, sizeof(ubo), &ubo);
+      vkCmdUpdateBuffer(frame_data[frame_index].cmd_buffer, ubo_buffer, 0,
+                        sizeof(ubo), &ubo);
 
       buffer_barrier(frame_data[frame_index].cmd_buffer,
          VK_PIPELINE_STAGE_TRANSFER_BIT,

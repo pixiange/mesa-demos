@@ -76,7 +76,8 @@ int floating_height;
 static void
 dispatch_key(xkb_keycode_t xkb_key, enum wl_keyboard_key_state state)
 {
-   xkb_keysym_t sym = xkb_state_key_get_one_sym(keyboard_data.xkb_state, xkb_key);
+   xkb_keysym_t
+      sym = xkb_state_key_get_one_sym(keyboard_data.xkb_state, xkb_key);
    enum wsi_key wsi_key = WSI_KEY_OTHER;
    switch (sym) {
    case XKB_KEY_Escape:
@@ -134,7 +135,8 @@ key(void *data, struct wl_keyboard *keyboard, unsigned serial,
 
 static void
 modifiers(void *data, struct wl_keyboard *keyboard, unsigned serial,
-    unsigned mods_depressed, unsigned mods_latched, unsigned mods_locked, unsigned group)
+          unsigned mods_depressed, unsigned mods_latched, unsigned mods_locked,
+          unsigned group)
 {
    xkb_state_update_mask(keyboard_data.xkb_state, mods_depressed, mods_latched,
                          mods_locked, 0, 0, group);
@@ -200,8 +202,10 @@ seat_capabilities(void *data, struct wl_seat *seat,
 {
    if (caps & WL_SEAT_CAPABILITY_KEYBOARD) {
       keyboard_data.keyboard = wl_seat_get_keyboard(seat);
-      wl_keyboard_add_listener(keyboard_data.keyboard, &keyboard_listener, data);
-      keyboard_data.keyboard_timer_fd = timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK);
+      wl_keyboard_add_listener(keyboard_data.keyboard, &keyboard_listener,
+                               data);
+      keyboard_data.keyboard_timer_fd =
+         timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK);
    } else if (!(caps & WL_SEAT_CAPABILITY_KEYBOARD)) {
       wl_keyboard_destroy(keyboard_data.keyboard);
       keyboard_data.keyboard = NULL;
@@ -339,7 +343,8 @@ static struct libdecor_frame_interface frame_interface = {
    .commit = frame_commit,
 };
 
-static void init_window(const char *title, int width, int height, bool fullscreen)
+static void
+init_window(const char *title, int width, int height, bool fullscreen)
 {
    assert(compositor);
 
@@ -447,7 +452,7 @@ static bool update_window()
 
       if (pollfds[2].revents & POLLIN) {
          uint64_t repeats;
-         if(read(keyboard_data.keyboard_timer_fd, &repeats, sizeof(repeats)) == 8) {
+         if (read(keyboard_data.keyboard_timer_fd, &repeats, sizeof(repeats)) == 8) {
             for(uint64_t i = 0; i < repeats; i++) {
                dispatch_key(keyboard_data.repeat_scancode, 1);
             }
