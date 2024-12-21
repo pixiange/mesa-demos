@@ -162,9 +162,9 @@ init_vk(const char *wsi_extension)
 
    uint32_t count = 0;
    for (uint32_t i = 0; i < inst_ext_props_count; ++i) {
-      if (!strcmp(inst_ext_props[i].extensionName, 
+      if (!strcmp(inst_ext_props[i].extensionName,
                   VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME)) {
-         inst_exts[count++] = 
+         inst_exts[count++] =
             VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME;
          instance_flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
       }
@@ -173,7 +173,7 @@ init_vk(const char *wsi_extension)
    free(inst_ext_props);
 
    if (wsi_extension) {
-      /* Requires a WSI extension, add it and the base extension 
+      /* Requires a WSI extension, add it and the base extension
        * VK_KHR_SURFACE_EXTENSION_NAME
        */
       inst_exts[count++] = VK_KHR_SURFACE_EXTENSION_NAME;
