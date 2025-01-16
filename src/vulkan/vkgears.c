@@ -47,6 +47,8 @@
 #define VK_API_VERSION_PATCH VK_VERSION_PATCH
 #endif
 
+static unsigned long device_index = 0;
+
 static struct wsi_interface wsi;
 
 static VkInstance instance;
@@ -220,13 +222,25 @@ init_vk(const char *wsi_extension)
    if (res != VK_SUCCESS)
       error("Failed to create Vulkan instance.");
 
-   count = 1;
-   res = vkEnumeratePhysicalDevices(instance, &count, &physical_device);
-   if (res != VK_SUCCESS && res != VK_INCOMPLETE)
+   res = vkEnumeratePhysicalDevices(instance, &count, NULL);
+   if (res != VK_SUCCESS)
       error("Failed to enumerate physical devices.");
 
    if (count == 0)
       error("No Vulkan devices found.");
+
+   VkPhysicalDevice *physical_devices = calloc(count, sizeof(VkPhysicalDevice));
+   if (!physical_devices)
+      error("Failed to allocate physical devices.");
+
+   res = vkEnumeratePhysicalDevices(instance, &count, physical_devices);
+   if (res != VK_SUCCESS)
+      error("Failed to enumerate physical devices.");
+
+   if (device_index >= count)
+      error("Invalid device");
+
+   physical_device = physical_devices[device_index];
 
    vkGetPhysicalDeviceMemoryProperties(physical_device, &mem_props);
 
@@ -1411,6 +1425,7 @@ static void
 usage(void)
 {
    printf("Usage:\n");
+   printf("  -device N               Use Vulkan device #N\n");
    printf("  -samples N              run in multisample mode with N samples\n");
    printf("  -present-mailbox        run with present mode mailbox\n");
    printf("  -present-immediate      run with present mode immediate\n");
@@ -1616,6 +1631,10 @@ main(int argc, char *argv[])
       }
       else if (strcmp(argv[i], "-fullscreen") == 0) {
          fullscreen = true;
+      }
+      else if (strcmp(argv[i], "-device") == 0 && i + 1 < argc) {
+         i++;
+         device_index = strtoul(argv[i], NULL, 10);
       }
       else {
          usage();
