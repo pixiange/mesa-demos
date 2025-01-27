@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 void
-mat4_multiply(float *m, const float *n)
+mat4_multiply(float m[16], const float n[16])
 {
    float tmp[16];
    const float *row, *column;
@@ -33,7 +33,7 @@ mat4_multiply(float *m, const float *n)
 }
 
 void
-mat4_scale(float *m, float x, float y, float z)
+mat4_scale(float m[16], float x, float y, float z)
 {
    float s[16] = {
       x, 0, 0, 0,
@@ -45,7 +45,7 @@ mat4_scale(float *m, float x, float y, float z)
 }
 
 void
-mat4_rotate(float *m, float angle, float x, float y, float z)
+mat4_rotate(float m[16], float angle, float x, float y, float z)
 {
    double s, c;
 #if HAVE_SINCOS
@@ -65,7 +65,7 @@ mat4_rotate(float *m, float angle, float x, float y, float z)
 }
 
 void
-mat4_translate(float *m, float x, float y, float z)
+mat4_translate(float m[16], float x, float y, float z)
 {
    float t[16] = { 1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  x, y, z, 1 };
 
@@ -73,7 +73,7 @@ mat4_translate(float *m, float x, float y, float z)
 }
 
 void
-mat4_identity(float *m)
+mat4_identity(float m[16])
 {
    float t[16] = {
       1.0, 0.0, 0.0, 0.0,
@@ -86,7 +86,7 @@ mat4_identity(float *m)
 }
 
 void
-mat4_transpose(float *m)
+mat4_transpose(float m[16])
 {
    float t[16] = {
       m[0], m[4], m[8],  m[12],
@@ -98,7 +98,7 @@ mat4_transpose(float *m)
 }
 
 void
-mat4_invert(float *m)
+mat4_invert(float m[16])
 {
    float t[16];
    mat4_identity(t);
@@ -118,7 +118,7 @@ mat4_invert(float *m)
 }
 
 void
-mat4_frustum_gl(float *m, float l, float r, float b, float t, float n, float f)
+mat4_frustum_gl(float m[16], float l, float r, float b, float t, float n, float f)
 {
    float tmp[16];
    mat4_identity(tmp);
@@ -140,7 +140,7 @@ mat4_frustum_gl(float *m, float l, float r, float b, float t, float n, float f)
 }
 
 void
-mat4_frustum_vk(float *m, float l, float r, float b, float t, float n, float f)
+mat4_frustum_vk(float m[16], float l, float r, float b, float t, float n, float f)
 {
    float tmp[16];
    mat4_identity(tmp);
@@ -162,7 +162,7 @@ mat4_frustum_vk(float *m, float l, float r, float b, float t, float n, float f)
 }
 
 void
-mat4_perspective_gl(float *m, float fovy, float aspect,
+mat4_perspective_gl(float m[16], float fovy, float aspect,
                     float zNear, float zFar)
 {
    float tmp[16];

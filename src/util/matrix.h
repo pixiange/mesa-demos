@@ -10,7 +10,7 @@
  * @param n the second matrix to multiply
  */
 void
-mat4_multiply(float *m, const float *n);
+mat4_multiply(float m[16], const float n[16]);
 
 /**
  * Scales a 4x4 matrix.
@@ -21,7 +21,7 @@ mat4_multiply(float *m, const float *n);
  * @param z the scale-factor for the z-axis
  */
 void
-mat4_scale(float *m, float x, float y, float z);
+mat4_scale(float m[16], float x, float y, float z);
 
 /**
  * Rotates a 4x4 matrix.
@@ -33,7 +33,7 @@ mat4_scale(float *m, float x, float y, float z);
  * @param z the z component of the direction to rotate to
  */
 void
-mat4_rotate(float *m, float angle, float x, float y, float z);
+mat4_rotate(float m[16], float angle, float x, float y, float z);
 
 /**
  * Translates a 4x4 matrix.
@@ -44,7 +44,7 @@ mat4_rotate(float *m, float angle, float x, float y, float z);
  * @param z the z component of the direction to translate to
  */
 void
-mat4_translate(float *m, float x, float y, float z);
+mat4_translate(float m[16], float x, float y, float z);
 
 /**
  * Creates an identity 4x4 matrix.
@@ -52,7 +52,7 @@ mat4_translate(float *m, float x, float y, float z);
  * @param m the matrix make an identity matrix
  */
 void
-mat4_identity(float *m);
+mat4_identity(float m[16]);
 
 /**
  * Transposes a 4x4 matrix.
@@ -60,7 +60,7 @@ mat4_identity(float *m);
  * @param m the matrix to transpose
  */
 void
-mat4_transpose(float *m);
+mat4_transpose(float m[16]);
 
 /**
  * Inverts a 4x4 matrix.
@@ -70,7 +70,7 @@ mat4_transpose(float *m);
  * for an explanation.
  */
 void
-mat4_invert(float *m);
+mat4_invert(float m[16]);
 
 /**
  * Calculate an OpenGL frustum projection transformation.
@@ -84,7 +84,7 @@ mat4_invert(float *m);
  * @param f the far plane distance
  */
 void
-mat4_frustum_gl(float *m, float l, float r, float b, float t, float n, float f);
+mat4_frustum_gl(float m[16], float l, float r, float b, float t, float n, float f);
 
 /**
  * Calculate a Vulkan frustum projection transformation.
@@ -98,7 +98,7 @@ mat4_frustum_gl(float *m, float l, float r, float b, float t, float n, float f);
  * @param f the far plane distance
  */
 void
-mat4_frustum_vk(float *m, float l, float r, float b, float t, float n, float f);
+mat4_frustum_vk(float m[16], float l, float r, float b, float t, float n, float f);
 
 /**
  * Calculate a perspective projection transformation.
@@ -110,7 +110,7 @@ mat4_frustum_vk(float *m, float l, float r, float b, float t, float n, float f);
  * @param zFar the far clipping plane
  */
 void
-mat4_perspective_gl(float *m, float fovy, float aspect,
+mat4_perspective_gl(float m[16], float fovy, float aspect,
                     float zNear, float zFar);
 
 #endif /* MATRIX_H */
