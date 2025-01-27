@@ -18,16 +18,17 @@ mat4_multiply(float m[16], const float n[16])
 {
    float tmp[16];
    const float *row, *column;
-   div_t d;
-   int i, j;
+   int i, j, k;
 
-   for (i = 0; i < 16; i++) {
-      tmp[i] = 0;
-      d = div(i, 4);
-      row = n + d.quot * 4;
-      column = m + d.rem;
-      for (j = 0; j < 4; j++)
-         tmp[i] += row[j] * column[j * 4];
+   for (j = 0; j < 4; j++) {
+      for (i = 0; i < 4; i++) {
+         float sum = 0.0f;
+         row = n + j * 4;
+         column = m + i;
+         for (k = 0; k < 4; k++)
+            sum += row[k] * column[k * 4];
+         tmp[j * 4 + i] = sum;
+      }
    }
    memcpy(m, &tmp, sizeof tmp);
 }
