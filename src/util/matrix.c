@@ -120,53 +120,46 @@ mat4_invert(float m[16])
 void
 mat4_frustum_gl(float m[16], float l, float r, float b, float t, float n, float f)
 {
-   float tmp[16];
-   mat4_identity(tmp);
+   mat4_identity(m);
 
    float deltaX = r - l;
    float deltaY = t - b;
    float deltaZ = f - n;
 
-   mat4_set(tmp, 0, 0, (2 * n) / deltaX);
-   mat4_set(tmp, 1, 1, (2 * n) / deltaY);
-   mat4_set(tmp, 0, 2, (r + l) / deltaX);
-   mat4_set(tmp, 1, 2, (t + b) / deltaY);
-   mat4_set(tmp, 2, 2, -(f + n) / deltaZ);
-   mat4_set(tmp, 3, 2, -1.0f);
-   mat4_set(tmp, 2, 3, -(2 * f * n) / deltaZ);
-   mat4_set(tmp, 3, 3, 0.0f);
-
-   memcpy(m, tmp, sizeof(tmp));
+   mat4_set(m, 0, 0, (2 * n) / deltaX);
+   mat4_set(m, 1, 1, (2 * n) / deltaY);
+   mat4_set(m, 0, 2, (r + l) / deltaX);
+   mat4_set(m, 1, 2, (t + b) / deltaY);
+   mat4_set(m, 2, 2, -(f + n) / deltaZ);
+   mat4_set(m, 3, 2, -1.0f);
+   mat4_set(m, 2, 3, -(2 * f * n) / deltaZ);
+   mat4_set(m, 3, 3, 0.0f);
 }
 
 void
 mat4_frustum_vk(float m[16], float l, float r, float b, float t, float n, float f)
 {
-   float tmp[16];
-   mat4_identity(tmp);
+   mat4_identity(m);
 
    float deltaX = r - l;
    float deltaY = t - b;
    float deltaZ = f - n;
 
-   mat4_set(tmp, 0, 0, (2 * n) / deltaX);
-   mat4_set(tmp, 1, 1, (-2 * n) / deltaY);
-   mat4_set(tmp, 0, 2, (r + l) / deltaX);
-   mat4_set(tmp, 1, 2, (t + b) / deltaY);
-   mat4_set(tmp, 2, 2, f / (n - f));
-   mat4_set(tmp, 3, 2, -1.0f);
-   mat4_set(tmp, 2, 3, -(f * n) / deltaZ);
-   mat4_set(tmp, 3, 3, 0.0f);
-
-   memcpy(m, tmp, sizeof(tmp));
+   mat4_set(m, 0, 0, (2 * n) / deltaX);
+   mat4_set(m, 1, 1, (-2 * n) / deltaY);
+   mat4_set(m, 0, 2, (r + l) / deltaX);
+   mat4_set(m, 1, 2, (t + b) / deltaY);
+   mat4_set(m, 2, 2, f / (n - f));
+   mat4_set(m, 3, 2, -1.0f);
+   mat4_set(m, 2, 3, -(f * n) / deltaZ);
+   mat4_set(m, 3, 3, 0.0f);
 }
 
 void
 mat4_perspective_gl(float m[16], float fovy, float aspect,
                     float zNear, float zFar)
 {
-   float tmp[16];
-   mat4_identity(tmp);
+   mat4_identity(m);
 
    double sine, cosine, cotangent, deltaZ;
    float radians = fovy / 2 * M_PI / 180;
@@ -180,12 +173,10 @@ mat4_perspective_gl(float m[16], float fovy, float aspect,
 
    cotangent = cosine / sine;
 
-   mat4_set(tmp, 0, 0, cotangent / aspect);
-   mat4_set(tmp, 1, 1, cotangent);
-   mat4_set(tmp, 2, 2, -(zFar + zNear) / deltaZ);
-   mat4_set(tmp, 3, 2, -1.0f);
-   mat4_set(tmp, 2, 3, -2 * zNear * zFar / deltaZ);
-   mat4_set(tmp, 3, 3, 0.0f);
-
-   memcpy(m, tmp, sizeof(tmp));
+   mat4_set(m, 0, 0, cotangent / aspect);
+   mat4_set(m, 1, 1, cotangent);
+   mat4_set(m, 2, 2, -(zFar + zNear) / deltaZ);
+   mat4_set(m, 3, 2, -1.0f);
+   mat4_set(m, 2, 3, -2 * zNear * zFar / deltaZ);
+   mat4_set(m, 3, 3, 0.0f);
 }
