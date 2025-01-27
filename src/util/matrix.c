@@ -17,17 +17,14 @@ void
 mat4_multiply(float m[16], const float n[16])
 {
    float tmp[16];
-   const float *row, *column;
    int i, j, k;
 
    for (j = 0; j < 4; j++) {
       for (i = 0; i < 4; i++) {
          float sum = 0.0f;
-         row = n + j * 4;
-         column = m + i;
          for (k = 0; k < 4; k++)
-            sum += row[k] * column[k * 4];
-         tmp[j * 4 + i] = sum;
+            sum += mat4_get(m, i, k) * mat4_get(n, k, j);
+         mat4_set(tmp, i, j, sum);
       }
    }
    memcpy(m, &tmp, sizeof tmp);
@@ -107,11 +104,13 @@ mat4_invert(float m[16])
    // Extract and invert the translation part 't'. The inverse of a
    // translation matrix can be calculated by negating the translation
    // coordinates.
-   t[12] = -m[12]; t[13] = -m[13]; t[14] = -m[14];
+   for (int i = 0; i < 3; ++i)
+      mat4_set(t, i, 3, -mat4_get(m, i, 3));
 
    // Invert the rotation part 'r'. The inverse of a rotation matrix is
    // equal to its transpose.
-   m[12] = m[13] = m[14] = 0;
+   for (int i = 0; i < 3; ++i)
+      mat4_set(m, i, 3, 0.0f);
    mat4_transpose(m);
 
    // inv(m) = inv(r) * inv(t)
@@ -128,14 +127,14 @@ mat4_frustum_gl(float m[16], float l, float r, float b, float t, float n, float 
    float deltaY = t - b;
    float deltaZ = f - n;
 
-   tmp[0] = (2 * n) / deltaX;
-   tmp[5] = (2 * n) / deltaY;
-   tmp[8] = (r + l) / deltaX;
-   tmp[9] = (t + b) / deltaY;
-   tmp[10] = -(f + n) / deltaZ;
-   tmp[11] = -1;
-   tmp[14] = -(2 * f * n) / deltaZ;
-   tmp[15] = 0;
+   mat4_set(tmp, 0, 0, (2 * n) / deltaX);
+   mat4_set(tmp, 1, 1, (2 * n) / deltaY);
+   mat4_set(tmp, 0, 2, (r + l) / deltaX);
+   mat4_set(tmp, 1, 2, (t + b) / deltaY);
+   mat4_set(tmp, 2, 2, -(f + n) / deltaZ);
+   mat4_set(tmp, 3, 2, -1.0f);
+   mat4_set(tmp, 2, 3, -(2 * f * n) / deltaZ);
+   mat4_set(tmp, 3, 3, 0.0f);
 
    memcpy(m, tmp, sizeof(tmp));
 }
@@ -150,14 +149,14 @@ mat4_frustum_vk(float m[16], float l, float r, float b, float t, float n, float 
    float deltaY = t - b;
    float deltaZ = f - n;
 
-   tmp[0] = (2 * n) / deltaX;
-   tmp[5] = (-2 * n) / deltaY;
-   tmp[8] = (r + l) / deltaX;
-   tmp[9] = (t + b) / deltaY;
-   tmp[10] = f / (n - f);
-   tmp[11] = -1;
-   tmp[14] = -(f * n) / deltaZ;
-   tmp[15] = 0;
+   mat4_set(tmp, 0, 0, (2 * n) / deltaX);
+   mat4_set(tmp, 1, 1, (-2 * n) / deltaY);
+   mat4_set(tmp, 0, 2, (r + l) / deltaX);
+   mat4_set(tmp, 1, 2, (t + b) / deltaY);
+   mat4_set(tmp, 2, 2, f / (n - f));
+   mat4_set(tmp, 3, 2, -1.0f);
+   mat4_set(tmp, 2, 3, -(f * n) / deltaZ);
+   mat4_set(tmp, 3, 3, 0.0f);
 
    memcpy(m, tmp, sizeof(tmp));
 }
@@ -181,12 +180,12 @@ mat4_perspective_gl(float m[16], float fovy, float aspect,
 
    cotangent = cosine / sine;
 
-   tmp[0] = cotangent / aspect;
-   tmp[5] = cotangent;
-   tmp[10] = -(zFar + zNear) / deltaZ;
-   tmp[11] = -1;
-   tmp[14] = -2 * zNear * zFar / deltaZ;
-   tmp[15] = 0;
+   mat4_set(tmp, 0, 0, cotangent / aspect);
+   mat4_set(tmp, 1, 1, cotangent);
+   mat4_set(tmp, 2, 2, -(zFar + zNear) / deltaZ);
+   mat4_set(tmp, 3, 2, -1.0f);
+   mat4_set(tmp, 2, 3, -2 * zNear * zFar / deltaZ);
+   mat4_set(tmp, 3, 3, 0.0f);
 
    memcpy(m, tmp, sizeof(tmp));
 }

@@ -1,6 +1,38 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <assert.h>
+
+/*
+ * 4x4 matrix routines. Works on column-major data, suitable for usage
+ * with OpenGL.
+ *
+ * memory layout:
+ *
+ * [m00 m10 m20 m30
+ *  m01 m11 m21 m31
+ *  m02 m12 m22 m32
+ *  m03 m13 m23 m33]
+ *
+ * m(i,j) = m[j * 4 + i]
+ */
+
+static inline float
+mat4_get(const float m[16], unsigned i, unsigned j)
+{
+    assert(i < 4);
+    assert(j < 4);
+    return m[j * 4 + i];
+}
+
+static inline void
+mat4_set(float m[16], unsigned i, unsigned j, float v)
+{
+    assert(i < 4);
+    assert(j < 4);
+    m[j * 4 + i] = v;
+}
+
 /**
  * Multiplies two 4x4 matrices.
  *
