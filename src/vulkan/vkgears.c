@@ -859,11 +859,11 @@ static uint32_t fs_spirv_source[] = {
 };
 
 struct ubo {
-   float projection[16];
+   float projection[4][4];
 };
 
 struct push_constants {
-   float modelview[16];
+   float modelview[4][4];
    float material_color[3];
 };
 
@@ -1307,20 +1307,20 @@ init_gears()
 }
 
 static void
-draw_gear(VkCommandBuffer cmdbuf, const float view[16],
+draw_gear(VkCommandBuffer cmdbuf, const float view[4][4],
           float position[2], float angle,
           const float material_color[3],
           unsigned first_vertex, unsigned vertex_count)
 {
    /* Translate and rotate the gear */
-   float modelview[16];
+   float modelview[4][4];
    mat4_identity(modelview);
    mat4_multiply(modelview, view);
    mat4_translate(modelview, position[0], position[1], 0);
    mat4_rotate(modelview, 2 * M_PI * angle / 360.0, 0, 0, 1);
 
    float h = (float)height / width;
-   float projection[16];
+   float projection[4][4];
    mat4_identity(projection);
    mat4_frustum_vk(projection, -1.0, 1.0, -h, +h, 5.0f, 60.0f);
 
@@ -1340,7 +1340,7 @@ float angle = 0.0;
 #define G2L(x) ((x) < 0.04045 ? (x) / 12.92 : powf(((x) + 0.055) / 1.055, 2.4))
 
 static void
-draw_gears(VkCommandBuffer cmdbuf, const float view[16])
+draw_gears(VkCommandBuffer cmdbuf, const float view[4][4])
 {
    vkCmdBindVertexBuffers(cmdbuf, 0, 2,
       (VkBuffer[]) {
@@ -1739,7 +1739,7 @@ main(int argc, char *argv[])
          ubo_buffer, 0, sizeof(ubo));
 
       /* Translate and rotate the view */
-      float view[16];
+      float view[4][4];
       mat4_identity(view);
       mat4_translate(view, 0, 0, -40);
       mat4_rotate(view, 2 * M_PI * view_rot[0] / 360.0, 1, 0, 0);

@@ -103,8 +103,8 @@ struct app_data {
    PFNGLEGLIMAGETARGETTEXTURE2DOESPROC glEGLImageTargetTexture2DOES;
 
    /* Shaders */
-   GLfloat projection_matrix[16];
-   GLfloat model_view_matrix[16];
+   float projection_matrix[4][4];
+   float model_view_matrix[4][4];
    GLuint model_view_projection_matrix_loc;
    GLuint texture0_loc;
 
@@ -182,9 +182,9 @@ gl_redraw(struct app_data *data)
    glEnableVertexAttribArray(0);
    glEnableVertexAttribArray(1);
 
-   GLfloat transform[16];
-   GLfloat model_view[16];
-   GLfloat model_view_projection[16];
+   float transform[4][4];
+   float model_view[4][4];
+   float model_view_projection[4][4];
 
    /* Rotate the view */
    memcpy(transform, data->model_view_matrix, sizeof(transform));
@@ -205,7 +205,7 @@ gl_redraw(struct app_data *data)
 
       /* Load shader ModelViewProjection uniform */
       glUniformMatrix4fv(data->model_view_projection_matrix_loc, 1, GL_FALSE,
-                         model_view_projection);
+                         (GLfloat *)model_view_projection);
 
       glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
    }

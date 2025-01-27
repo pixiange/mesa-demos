@@ -34,7 +34,7 @@ static float CurQuat[4] = { 0, 0, 0, 1 };
 static GLboolean ButtonDown = GL_FALSE;
 static GLint ButtonX, ButtonY;
 
-static GLfloat Projection[16];
+static float Projection[4][4];
 
 
 static void
@@ -51,8 +51,8 @@ CheckError(int line)
 static void
 Redisplay(void)
 {
-   GLfloat rot[4][4];
-   GLfloat mvp[16];
+   float rot[4][4];
+   float mvp[4][4];
 
    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -61,7 +61,7 @@ Redisplay(void)
    mat4_identity(mvp);
    mat4_multiply(mvp, Projection);
    mat4_translate(mvp, 0, 0, -10);
-   mat4_multiply(mvp, (float *)rot);
+   mat4_multiply(mvp, rot);
 
    /* Set the MVP matrix */
    glUniformMatrix4fv(uModelViewProj, 1, GL_FALSE, (float *) mvp);

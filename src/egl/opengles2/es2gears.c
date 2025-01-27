@@ -82,7 +82,7 @@ static GLuint ModelViewProjectionMatrix_location,
               LightSourcePosition_location,
               MaterialColor_location;
 /** The projection matrix */
-static GLfloat ProjectionMatrix[16];
+static GLfloat ProjectionMatrix[4][4];
 /** The direction of the directional light for the scene */
 static const GLfloat LightSourcePosition[4] = { 5.0, 5.0, 10.0, 1.0};
 
@@ -300,12 +300,12 @@ create_gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
  * @param color the color of the gear
  */
 static void
-draw_gear(struct gear *gear, GLfloat *transform,
+draw_gear(struct gear *gear, const float transform[4][4],
       GLfloat x, GLfloat y, GLfloat angle, const GLfloat color[4])
 {
-   GLfloat model_view[16];
-   GLfloat normal_matrix[16];
-   GLfloat model_view_projection[16];
+   float model_view[4][4];
+   float normal_matrix[4][4];
+   float model_view_projection[4][4];
 
    /* Translate and rotate the gear */
    memcpy(model_view, transform, sizeof (model_view));
@@ -317,7 +317,7 @@ draw_gear(struct gear *gear, GLfloat *transform,
    mat4_multiply(model_view_projection, model_view);
 
    glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE,
-                      model_view_projection);
+                      (const GLfloat *)model_view_projection);
 
    /*
     * Create and set the NormalMatrix. It's the inverse transpose of the
@@ -326,7 +326,8 @@ draw_gear(struct gear *gear, GLfloat *transform,
    memcpy(normal_matrix, model_view, sizeof (normal_matrix));
    mat4_invert(normal_matrix);
    mat4_transpose(normal_matrix);
-   glUniformMatrix4fv(NormalMatrix_location, 1, GL_FALSE, normal_matrix);
+   glUniformMatrix4fv(NormalMatrix_location, 1, GL_FALSE,
+                      (const GLfloat *)normal_matrix);
 
    /* Set the gear color */
    glUniform4fv(MaterialColor_location, 1, color);
@@ -361,7 +362,7 @@ gears_draw(void)
    const static GLfloat red[4] = { 0.8, 0.1, 0.0, 1.0 };
    const static GLfloat green[4] = { 0.0, 0.8, 0.2, 1.0 };
    const static GLfloat blue[4] = { 0.2, 0.2, 1.0, 1.0 };
-   GLfloat transform[16];
+   float transform[4][4];
    mat4_identity(transform);
 
    glClearColor(0.0, 0.0, 0.0, 1.0);

@@ -14,9 +14,9 @@
 #include <stdlib.h>
 
 void
-mat4_multiply(float m[16], const float n[16])
+mat4_multiply(float m[4][4], const float n[4][4])
 {
-   float tmp[16];
+   float tmp[4][4];
    int i, j, k;
 
    for (j = 0; j < 4; j++) {
@@ -31,19 +31,19 @@ mat4_multiply(float m[16], const float n[16])
 }
 
 void
-mat4_scale(float m[16], float x, float y, float z)
+mat4_scale(float m[4][4], float x, float y, float z)
 {
-   float s[16] = {
-      x, 0, 0, 0,
-      0, y, 0, 0,
-      0, 0, z, 0,
-      0, 0, 0, 1
+   float s[4][4] = {
+      { x, 0, 0, 0 },
+      { 0, y, 0, 0 },
+      { 0, 0, z, 0 },
+      { 0, 0, 0, 1 }
    };
    mat4_multiply(m, s);
 }
 
 void
-mat4_rotate(float m[16], float angle, float x, float y, float z)
+mat4_rotate(float m[4][4], float angle, float x, float y, float z)
 {
    double s, c;
 #if HAVE_SINCOS
@@ -52,53 +52,57 @@ mat4_rotate(float m[16], float angle, float x, float y, float z)
    s = sin(angle);
    c = cos(angle);
 #endif
-   float r[16] = {
-      x * x * (1 - c) + c,     y * x * (1 - c) + z * s, x * z * (1 - c) - y * s, 0,
-      x * y * (1 - c) - z * s, y * y * (1 - c) + c,     y * z * (1 - c) + x * s, 0,
-      x * z * (1 - c) + y * s, y * z * (1 - c) - x * s, z * z * (1 - c) + c,     0,
-      0, 0, 0, 1
+   float r[4][4] = {
+      { x * x * (1 - c) + c,     y * x * (1 - c) + z * s, x * z * (1 - c) - y * s, 0 },
+      { x * y * (1 - c) - z * s, y * y * (1 - c) + c,     y * z * (1 - c) + x * s, 0 },
+      { x * z * (1 - c) + y * s, y * z * (1 - c) - x * s, z * z * (1 - c) + c,     0 },
+      { 0, 0, 0, 1 }
    };
 
    mat4_multiply(m, r);
 }
 
 void
-mat4_translate(float m[16], float x, float y, float z)
+mat4_translate(float m[4][4], float x, float y, float z)
 {
-   float t[16] = { 1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  x, y, z, 1 };
+   float t[4][4] = {
+      { 1, 0, 0, 0 },
+      { 0, 1, 0, 0 },
+      { 0, 0, 1, 0 },
+      { x, y, z, 1 }
+   };
 
    mat4_multiply(m, t);
 }
 
 void
-mat4_identity(float m[16])
+mat4_identity(float m[4][4])
 {
-   float t[16] = {
-      1.0, 0.0, 0.0, 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0,
+   float t[4][4] = {
+      { 1.0, 0.0, 0.0, 0.0 },
+      { 0.0, 1.0, 0.0, 0.0 },
+      { 0.0, 0.0, 1.0, 0.0 },
+      { 0.0, 0.0, 0.0, 1.0 }
    };
 
    memcpy(m, t, sizeof(t));
 }
 
 void
-mat4_transpose(float m[16])
+mat4_transpose(float m[4][4])
 {
-   float t[16] = {
-      m[0], m[4], m[8],  m[12],
-      m[1], m[5], m[9],  m[13],
-      m[2], m[6], m[10], m[14],
-      m[3], m[7], m[11], m[15]};
+   float t[4][4];
+   for (int i = 0; i < 4; ++i)
+      for (int j = 0; j < 4; ++j)
+         t[i][j] = m[j][i];
 
    memcpy(m, t, sizeof(t));
 }
 
 void
-mat4_invert(float m[16])
+mat4_invert(float m[4][4])
 {
-   float t[16];
+   float t[4][4];
    mat4_identity(t);
 
    // Extract and invert the translation part 't'. The inverse of a
@@ -118,7 +122,7 @@ mat4_invert(float m[16])
 }
 
 void
-mat4_frustum_gl(float m[16], float l, float r, float b, float t, float n, float f)
+mat4_frustum_gl(float m[4][4], float l, float r, float b, float t, float n, float f)
 {
    mat4_identity(m);
 
@@ -137,7 +141,7 @@ mat4_frustum_gl(float m[16], float l, float r, float b, float t, float n, float 
 }
 
 void
-mat4_frustum_vk(float m[16], float l, float r, float b, float t, float n, float f)
+mat4_frustum_vk(float m[4][4], float l, float r, float b, float t, float n, float f)
 {
    mat4_identity(m);
 
@@ -156,7 +160,7 @@ mat4_frustum_vk(float m[16], float l, float r, float b, float t, float n, float 
 }
 
 void
-mat4_perspective_gl(float m[16], float fovy, float aspect,
+mat4_perspective_gl(float m[4][4], float fovy, float aspect,
                     float zNear, float zFar)
 {
    mat4_identity(m);

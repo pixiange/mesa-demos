@@ -266,7 +266,7 @@ generateShadowMap( void )
 static void
 generateTextureMatrix( void )
 {
-    GLfloat  tmpMatrix[16];
+    float tmpMatrix[4][4];
 
     /*
      *  Set up projective texture matrix.  We use the GL_MODELVIEW matrix
@@ -280,15 +280,15 @@ generateTextureMatrix( void )
     gluLookAt( lightPos[0], lightPos[1], lightPos[2],
 	       lookat[0], lookat[1], lookat[2],
 	       up[0], up[1], up[2] );
-    glGetFloatv( GL_MODELVIEW_MATRIX, tmpMatrix );
+    glGetFloatv( GL_MODELVIEW_MATRIX, (GLfloat *)tmpMatrix );
     glPopMatrix();
 
     mat4_transpose( tmpMatrix );
 
-    glTexGenfv( GL_S, GL_OBJECT_PLANE, &tmpMatrix[0] );
-    glTexGenfv( GL_T, GL_OBJECT_PLANE, &tmpMatrix[4] );
-    glTexGenfv( GL_R, GL_OBJECT_PLANE, &tmpMatrix[8] );
-    glTexGenfv( GL_Q, GL_OBJECT_PLANE, &tmpMatrix[12] );
+    glTexGenfv( GL_S, GL_OBJECT_PLANE, tmpMatrix[0] );
+    glTexGenfv( GL_T, GL_OBJECT_PLANE, tmpMatrix[1] );
+    glTexGenfv( GL_R, GL_OBJECT_PLANE, tmpMatrix[2] );
+    glTexGenfv( GL_Q, GL_OBJECT_PLANE, tmpMatrix[3] );
 }
 
 static void

@@ -38,8 +38,8 @@ enum MoveModes {
 };
 enum MoveModes mode = MoveNone;
 
-GLfloat objectXform[4][4];
-GLfloat textureXform[MAX_TEX][4][4];
+float objectXform[4][4];
+float textureXform[MAX_TEX][4][4];
 
 void (*drawObject) (void);
 void (*loadTexture) (void);
@@ -443,14 +443,14 @@ float ffar = 1.9;
 float distance = -1.0;
 
 static void
-loadTextureProjection(int texUnit, GLfloat m[16])
+loadTextureProjection(int texUnit, const float m[4][4])
 {
-  GLfloat mInverse[4][4];
+  float mInverse[4][4];
 
   /* Should use true inverse, but since m consists only of rotations, we can
      just use the transpose. */
-  memcpy(mInverse, m, sizeof(GLfloat) * 4 * 4);
-  mat4_transpose((float *) mInverse);
+  memcpy(mInverse, m, sizeof(mInverse));
+  mat4_transpose(mInverse);
 
   ActiveTexture(GL_TEXTURE0_ARB + texUnit);
   glMatrixMode(GL_TEXTURE);
@@ -562,9 +562,9 @@ initialize(void)
   glMatrixMode(GL_MODELVIEW);
   glTranslatef(0, 0, -2);
 
-  mat4_identity((float *) objectXform);
+  mat4_identity(objectXform);
   for (i = 0; i < NumTextures; i++) {
-     mat4_identity((float *) textureXform[i]);
+     mat4_identity(textureXform[i]);
   }
 
   glMatrixMode(GL_PROJECTION);
@@ -648,7 +648,7 @@ display(void)
       }
     }
     for (i = 0; i < NumTextures; i++) {
-       loadTextureProjection(i, (GLfloat *) textureXform[i]);
+       loadTextureProjection(i, textureXform[i]);
     }
 
     if (showProjection) {

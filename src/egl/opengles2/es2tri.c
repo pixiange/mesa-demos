@@ -66,14 +66,14 @@ draw(void)
       { 0, 1, 0 },
       { 0, 0, 1 }
    };
-   float mat[16];
+   float mat[4][4];
 
    /* Set modelview/projection matrix */
    mat4_identity(mat);
    mat4_rotate(mat, view_rotx * (M_PI / 180.0), 1, 0, 0);
    mat4_rotate(mat, view_roty * (M_PI / 180.0), 0, 1, 0);
    mat4_scale(mat, 0.5, 0.5, 0.5);
-   glUniformMatrix4fv(u_matrix, 1, GL_FALSE, mat);
+   glUniformMatrix4fv(u_matrix, 1, GL_FALSE, (GLfloat *)mat);
 
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
