@@ -26,5 +26,5 @@ objview_files = files(
 )
 executable(
   'objview', objview_files,
-  dependencies: [dep_gl, dep_glu, dep_glut, dep_m, idep_glad, idep_util]
+  dependencies: [dep_gl, dep_glu, dep_glut, dep_m, idep_glad, idep_util, idep_readtex]
 )

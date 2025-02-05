@@ -13,7 +13,7 @@
 #include "glut_wrap.h"
 #include "../util/readtex.c"   /* I know, this is a hack. */
 
-#define TEXTURE_FILE DEMOS_DATA_DIR "girl.rgb"
+#define TEXTURE_FILE DEMOS_DATA_DIR "girl.png"
 
 static GLboolean Antialias = GL_FALSE;
 static GLboolean Animate = GL_FALSE;

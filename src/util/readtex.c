@@ -1,296 +1,85 @@
 /* readtex.c */
 
 /*
- * Read an SGI .rgb image file and generate a mipmap texture set.
- * Much of this code was borrowed from SGI's tk OpenGL toolkit.
+ * Read a PNG image file and generate a mipmap texture set.
  */
 
 
 
 #include "gl_wrap.h"
 #include <assert.h>
+#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "readtex.h"
 
-
-#ifndef SEEK_SET
-#  define SEEK_SET 0
-#endif
-
-
 /*
 ** RGB Image Structure
 */
 
-typedef struct _TK_RGBImageRec {
+typedef struct _PNGImageRec {
    GLint sizeX, sizeY;
    GLint components;
    unsigned char *data;
-} TK_RGBImageRec;
+} PNGImageRec;
 
-
-
-/******************************************************************************/
-
-typedef struct _rawImageRec {
-    unsigned short imagic;
-    unsigned short type;
-    unsigned short dim;
-    unsigned short sizeX, sizeY, sizeZ;
-    unsigned long min, max;
-    unsigned long wasteBytes;
-    char name[80];
-    unsigned long colorMap;
-    FILE *file;
-    unsigned char *tmp, *tmpR, *tmpG, *tmpB, *tmpA;
-    unsigned long rleEnd;
-    GLuint *rowStart;
-    GLint *rowSize;
-} rawImageRec;
-
-/******************************************************************************/
-
-static void ConvertShort(unsigned short *array, long length)
+static PNGImageRec *PNGImageLoad(const char *fileName)
 {
-   unsigned long b1, b2;
-   unsigned char *ptr;
+   png_image image;
+   memset(&image, 0, sizeof(image));
+   image.version = PNG_IMAGE_VERSION;
+   PNGImageRec *final = NULL;
+   unsigned char *data = NULL;
 
-   ptr = (unsigned char *)array;
-   while (length--) {
-      b1 = *ptr++;
-      b2 = *ptr++;
-      *array++ = (unsigned short) ((b1 << 8) | (b2));
-   }
-}
-
-static void ConvertLong(GLuint *array, long length)
-{
-   unsigned long b1, b2, b3, b4;
-   unsigned char *ptr;
-
-   ptr = (unsigned char *)array;
-   while (length--) {
-      b1 = *ptr++;
-      b2 = *ptr++;
-      b3 = *ptr++;
-      b4 = *ptr++;
-      *array++ = (b1 << 24) | (b2 << 16) | (b3 << 8) | (b4);
-   }
-}
-
-static rawImageRec *RawImageOpen(const char *fileName)
-{
-   union {
-      int testWord;
-      char testByte[4];
-   } endianTest;
-   rawImageRec *raw;
-   GLenum swapFlag;
-   int x;
-   size_t result;
-
-   endianTest.testWord = 1;
-   if (endianTest.testByte[0] == 1) {
-      swapFlag = GL_TRUE;
-   } else {
-      swapFlag = GL_FALSE;
+   if (png_image_begin_read_from_file(&image, fileName) == 0) {
+      fprintf(stderr, "Failed to read PNG image header for file '%s'\n", fileName);
+      goto error;
    }
 
-   raw = (rawImageRec *)calloc(1, sizeof(rawImageRec));
-   if (raw == NULL) {
+   int has_alpha = (image.flags & PNG_FORMAT_FLAG_ALPHA) != 0;
+   if (image.width > 16384 || image.height > 16384) {
+      /* Very large images can break old code using `int` instead of `size_t` */
+      fprintf(stderr, "Image size too big\n");
+      goto error;
+   }
+
+   image.format = has_alpha ? PNG_FORMAT_RGBA : PNG_FORMAT_RGB;
+
+   int components = has_alpha ? 4 : 3;
+   int stride = image.width * components;
+   data = calloc(image.height, stride);
+   if (!data) {
       fprintf(stderr, "Out of memory!\n");
-      return NULL;
-   }
-   raw->file = fopen(fileName, "rb");
-   if (raw->file == NULL) {
-      const char *baseName = strrchr(fileName, '/');
-      if(baseName)
-         raw->file = fopen(baseName + 1, "rb");
-      if(raw->file == NULL) {
-         perror(fileName);
-         free(raw);
-         return NULL;
-      }
+      goto error;
    }
 
-   result = fread(raw, 1, 12, raw->file);
-   assert(result == 12);
-
-   if (swapFlag) {
-      ConvertShort(&raw->imagic, 1);
-      ConvertShort(&raw->type, 1);
-      ConvertShort(&raw->dim, 1);
-      ConvertShort(&raw->sizeX, 1);
-      ConvertShort(&raw->sizeY, 1);
-      ConvertShort(&raw->sizeZ, 1);
+   // Use negative stride to place bottom row first
+   if (png_image_finish_read(&image, NULL, data, -stride, NULL) == 0) {
+      fprintf(stderr, "Failed to read PNG image contents for file '%s'\n", fileName);
+      goto error;
    }
 
-   raw->tmp = (unsigned char *)malloc(raw->sizeX*256);
-   raw->tmpR = (unsigned char *)malloc(raw->sizeX*256);
-   raw->tmpG = (unsigned char *)malloc(raw->sizeX*256);
-   raw->tmpB = (unsigned char *)malloc(raw->sizeX*256);
-   if (raw->sizeZ==4) {
-      raw->tmpA = (unsigned char *)malloc(raw->sizeX*256);
-   }
-   if (raw->tmp == NULL || raw->tmpR == NULL || raw->tmpG == NULL ||
-       raw->tmpB == NULL) {
-      fprintf(stderr, "Out of memory!\n");
-      free(raw->tmp);
-      free(raw->tmpR);
-      free(raw->tmpG);
-      free(raw->tmpB);
-      free(raw->tmpA);
-      free(raw);
-      return NULL;
-   }
-
-   if ((raw->type & 0xFF00) == 0x0100) {
-      x = raw->sizeY * raw->sizeZ * sizeof(GLuint);
-      raw->rowStart = (GLuint *)malloc(x);
-      raw->rowSize = (GLint *)malloc(x);
-      if (raw->rowStart == NULL || raw->rowSize == NULL) {
-         fprintf(stderr, "Out of memory!\n");
-         free(raw->tmp);
-         free(raw->tmpR);
-         free(raw->tmpG);
-         free(raw->tmpB);
-         free(raw->tmpA);
-         free(raw->rowStart);
-         free(raw->rowSize);
-         free(raw);
-         return NULL;
-      }
-      raw->rleEnd = 512 + (2 * x);
-      fseek(raw->file, 512, SEEK_SET);
-      result = fread(raw->rowStart, 1, x, raw->file);
-      assert(result == x);
-      result = fread(raw->rowSize, 1, x, raw->file);
-      assert(result == x);
-      if (swapFlag) {
-         ConvertLong(raw->rowStart, (long) (x/sizeof(GLuint)));
-         ConvertLong((GLuint *)raw->rowSize, (long) (x/sizeof(GLint)));
-      }
-   }
-   return raw;
-}
-
-static void RawImageClose(rawImageRec *raw)
-{
-   fclose(raw->file);
-   free(raw->tmp);
-   free(raw->tmpR);
-   free(raw->tmpG);
-   free(raw->tmpB);
-   if (raw->rowStart)
-      free(raw->rowStart);
-   if (raw->rowSize)
-      free(raw->rowSize);
-   if (raw->sizeZ>3) {
-      free(raw->tmpA);
-   }
-   free(raw);
-}
-
-static void RawImageGetRow(rawImageRec *raw, unsigned char *buf, int y, int z)
-{
-   unsigned char *iPtr, *oPtr, pixel;
-   int count, done = 0;
-   size_t result;
-
-   if ((raw->type & 0xFF00) == 0x0100) {
-      fseek(raw->file, (long) raw->rowStart[y+z*raw->sizeY], SEEK_SET);
-      result = fread(raw->tmp, 1, (unsigned int)raw->rowSize[y+z*raw->sizeY],
-                     raw->file);
-      assert(result == (unsigned int)raw->rowSize[y+z*raw->sizeY]);
-
-      iPtr = raw->tmp;
-      oPtr = buf;
-      while (!done) {
-         pixel = *iPtr++;
-         count = (int)(pixel & 0x7F);
-         if (!count) {
-			 done = 1;
-            return;
-         }
-         if (pixel & 0x80) {
-            while (count--) {
-               *oPtr++ = *iPtr++;
-            }
-         } else {
-            pixel = *iPtr++;
-            while (count--) {
-               *oPtr++ = pixel;
-            }
-         }
-      }
-   } else {
-      fseek(raw->file, 512+(y*raw->sizeX)+(z*raw->sizeX*raw->sizeY),
-            SEEK_SET);
-      result = fread(buf, 1, raw->sizeX, raw->file);
-      assert(result == raw->sizeX);
-   }
-}
-
-
-static void RawImageGetData(rawImageRec *raw, TK_RGBImageRec *final)
-{
-   unsigned char *ptr;
-   int i, j;
-
-   final->data = (unsigned char *)malloc((raw->sizeX+1)*(raw->sizeY+1)*4);
-   if (final->data == NULL) {
-      fprintf(stderr, "Out of memory!\n");
-      return;
-   }
-
-   ptr = final->data;
-   for (i = 0; i < (int)(raw->sizeY); i++) {
-      RawImageGetRow(raw, raw->tmpR, i, 0);
-      RawImageGetRow(raw, raw->tmpG, i, 1);
-      RawImageGetRow(raw, raw->tmpB, i, 2);
-      if (raw->sizeZ>3) {
-         RawImageGetRow(raw, raw->tmpA, i, 3);
-      }
-      for (j = 0; j < (int)(raw->sizeX); j++) {
-         *ptr++ = *(raw->tmpR + j);
-         *ptr++ = *(raw->tmpG + j);
-         *ptr++ = *(raw->tmpB + j);
-         if (raw->sizeZ>3) {
-            *ptr++ = *(raw->tmpA + j);
-         }
-      }
-   }
-}
-
-
-static TK_RGBImageRec *tkRGBImageLoad(const char *fileName)
-{
-   rawImageRec *raw;
-   TK_RGBImageRec *final;
-
-   raw = RawImageOpen(fileName);
-   if (!raw) {
-      fprintf(stderr, "File not found\n");
-      return NULL;
-   }
-   final = (TK_RGBImageRec *)malloc(sizeof(TK_RGBImageRec));
+   final = (PNGImageRec *)calloc(1, sizeof(PNGImageRec));
    if (final == NULL) {
       fprintf(stderr, "Out of memory!\n");
-      RawImageClose(raw);
-      return NULL;
+      goto error;
    }
-   final->sizeX = raw->sizeX;
-   final->sizeY = raw->sizeY;
-   final->components = raw->sizeZ;
-   RawImageGetData(raw, final);
-   RawImageClose(raw);
+   final->sizeX = image.width;
+   final->sizeY = image.height;
+   final->components = components;
+   final->data = data;
    return final;
+
+error:
+   png_image_free(&image);
+   free(data);
+   free(final);
+   return NULL;
 }
 
 
-static void FreeImage( TK_RGBImageRec *image )
+static void FreeImage( PNGImageRec *image )
 {
    free(image->data);
    free(image);
@@ -298,8 +87,8 @@ static void FreeImage( TK_RGBImageRec *image )
 
 
 /*
- * Load an SGI .rgb file and generate a set of 2-D mipmaps from it.
- * Input:  imageFile - name of .rgb to read
+ * Load an PNG .png file and generate a set of 2-D mipmaps from it.
+ * Input:  imageFile - name of .png to read
  *         intFormat - internal texture format to use, or number of components
  * Return:  GL_TRUE if success, GL_FALSE if error.
  */
@@ -316,9 +105,9 @@ GLboolean LoadRGBMipmaps2( const char *imageFile, GLenum target,
 {
    GLint error;
    GLenum format;
-   TK_RGBImageRec *image;
+   PNGImageRec *image;
 
-   image = tkRGBImageLoad( imageFile );
+   image = PNGImageLoad( imageFile );
    if (!image) {
       return GL_FALSE;
    }
@@ -356,8 +145,8 @@ GLboolean LoadRGBMipmaps2( const char *imageFile, GLenum target,
 
 
 /*
- * Load an SGI .rgb file and return a pointer to the image data.
- * Input:  imageFile - name of .rgb to read
+ * Load an PNG .png file and return a pointer to the image data.
+ * Input:  imageFile - name of .png to read
  * Output:  width - width of image
  *          height - height of image
  *          format - format of image (GL_RGB or GL_RGBA)
@@ -366,11 +155,11 @@ GLboolean LoadRGBMipmaps2( const char *imageFile, GLenum target,
 GLubyte *LoadRGBImage( const char *imageFile, GLint *width, GLint *height,
                        GLenum *format )
 {
-   TK_RGBImageRec *image;
+   PNGImageRec *image;
    GLint bytes;
    GLubyte *buffer;
 
-   image = tkRGBImageLoad( imageFile );
+   image = PNGImageLoad( imageFile );
    if (!image) {
       return NULL;
    }
@@ -448,20 +237,20 @@ static void ConvertRGBtoYUV(GLint w, GLint h, GLint texel_bytes,
 
 
 /*
- * Load an SGI .rgb file and return a pointer to the image data, converted
+ * Load an PNG .png file and return a pointer to the image data, converted
  * to 422 yuv.
  *
- * Input:  imageFile - name of .rgb to read
+ * Input:  imageFile - name of .png to read
  * Output:  width - width of image
  *          height - height of image
  * Return:  pointer to image data or NULL if error
  */
 GLushort *LoadYUVImage( const char *imageFile, GLint *width, GLint *height )
 {
-   TK_RGBImageRec *image;
+   PNGImageRec *image;
    GLushort *buffer;
 
-   image = tkRGBImageLoad( imageFile );
+   image = PNGImageLoad( imageFile );
    if (!image) {
       return NULL;
    }

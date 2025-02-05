@@ -41,7 +41,7 @@ static const char *CubeFragFile = DEMOS_DATA_DIR "cubemap.frag";
 static const char *SimpleVertFile = DEMOS_DATA_DIR "simple.vert";
 static const char *SimpleTexFragFile = DEMOS_DATA_DIR "shadowtex.frag";
 
-static const char *GroundImage = DEMOS_DATA_DIR "tile.rgb";
+static const char *GroundImage = DEMOS_DATA_DIR "tile.png";
 
 static GLuint Program1, Program2;
 
@@ -310,12 +310,12 @@ LoadFace(GLenum target, const char *filename,
 static void
 LoadEnvmaps(void)
 {
-   LoadFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB, "right.rgb", GL_TRUE, GL_FALSE);
-   LoadFace(GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB, "left.rgb", GL_TRUE, GL_FALSE);
-   LoadFace(GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB, "top.rgb", GL_FALSE, GL_TRUE);
-   LoadFace(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB, "bottom.rgb", GL_FALSE, GL_TRUE);
-   LoadFace(GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB, "front.rgb", GL_TRUE, GL_FALSE);
-   LoadFace(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB, "back.rgb", GL_TRUE, GL_FALSE);
+   LoadFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB, "right.png", GL_TRUE, GL_FALSE);
+   LoadFace(GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB, "left.png", GL_TRUE, GL_FALSE);
+   LoadFace(GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB, "top.png", GL_FALSE, GL_TRUE);
+   LoadFace(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB, "bottom.png", GL_FALSE, GL_TRUE);
+   LoadFace(GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB, "front.png", GL_TRUE, GL_FALSE);
+   LoadFace(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB, "back.png", GL_TRUE, GL_FALSE);
 }
 
 

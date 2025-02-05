@@ -22,7 +22,6 @@ inc_util = include_directories('.')
 
 files_libutil = files(
   'glinfo_common.c',
-  'readtex.c',
   'showbuffer.c',
   'trackball.c',
   'matrix.c',
@@ -43,5 +42,16 @@ _libutil = static_library(
 
 idep_util = declare_dependency(
   link_with: _libutil,
+  include_directories: inc_util,
+)
+
+_libreadtex = static_library(
+  'readtex',
+  files('readtex.c'),
+  include_directories: inc_glad,
+  dependencies: _deps + [dep_png],
+)
+idep_readtex = declare_dependency(
+  link_with: [_libreadtex],
   include_directories: inc_util,
 )

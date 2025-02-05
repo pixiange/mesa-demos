@@ -10,7 +10,7 @@
 #include "glut_wrap.h"
 #include "readtex.c"
 
-#define IMAGE_FILE DEMOS_DATA_DIR "arch.rgb"
+#define IMAGE_FILE DEMOS_DATA_DIR "arch.png"
 
 static int ImgWidth, ImgHeight;
 static GLenum ImgFormat;

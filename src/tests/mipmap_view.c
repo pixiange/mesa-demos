@@ -15,7 +15,7 @@
 
 #include "readtex.h"
 
-#define TEXTURE_FILE DEMOS_DATA_DIR "arch.rgb"
+#define TEXTURE_FILE DEMOS_DATA_DIR "arch.png"
 
 #define LEVELS 8
 #define SIZE (1<<LEVELS)

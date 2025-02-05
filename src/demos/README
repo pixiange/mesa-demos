@@ -61,7 +61,7 @@ TUNNEL
 ------
 
 Sources: tunnel.c image.c sources.c
-Data: bw.rgb tile.rgb
+Data: bw.png tile.png
 
 The model was designed and prelighted with Alias|Wavefront
 PowerAnimator V8. Triangle strips were built with a tool written by me
@@ -75,7 +75,7 @@ TUNNEL2
 ------
 
 Sources: tunnel2.c image.c sources.c
-Data: bw.rgb tile.rgb
+Data: bw.png tile.png
 
 The some tunnel demo but with two output channels. A nice
 example of the Mesa/Voodoo support for multiple boards in
@@ -86,7 +86,7 @@ TEAPOT
 ------
 
 Sources: teapot.c image.c dteapot.c shadow.c
-Data: bw.rgb tile.rgb
+Data: bw.png tile.png
 
 The shadow is drawn projecting the teapot geometry over the plane. All
 other light effects are drawn using the standard OpenGL capabilities.
@@ -99,7 +99,7 @@ FIRE
 ----
 
 Sources: fire.c image.c
-Data: s128.rgb tree2.rgb
+Data: s128.png tree2.png
 
 The demo use a small particle system to draw some nice visual effect.
 You can interactively change many parameters of the particle system

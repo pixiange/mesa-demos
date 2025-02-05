@@ -40,7 +40,7 @@ struct Texture {
    GLenum format;
 };
 
-static const char *textureLocation = DEMOS_DATA_DIR "girl2.rgb";
+static const char *textureLocation = DEMOS_DATA_DIR "girl2.png";
 
 static GLfloat viewRotx = 0.0, viewRoty = 0.0, viewRotz = 0.0;
 static struct BoundingBox box;

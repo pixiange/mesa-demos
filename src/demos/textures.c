@@ -32,10 +32,10 @@ static float TexPos[MAX_TEXTURES][3];
 static float TexAspect[MAX_TEXTURES];
 
 static const char *DefaultFiles[] = {
-   DEMOS_DATA_DIR "arch.rgb",
-   DEMOS_DATA_DIR "reflect.rgb",
-   DEMOS_DATA_DIR "tree2.rgba",
-   DEMOS_DATA_DIR "tile.rgb"
+   DEMOS_DATA_DIR "arch.png",
+   DEMOS_DATA_DIR "reflect.png",
+   DEMOS_DATA_DIR "tree2.png",
+   DEMOS_DATA_DIR "tile.png"
 };
 
 
@@ -424,7 +424,7 @@ static void
 Usage(void)
 {
    printf("Usage:\n");
-   printf("  textures [file.rgb] ...\n");
+   printf("  textures [file.png] ...\n");
    printf("Keys:\n");
    printf("  a - toggle animation\n");
    printf("  b - toggle blending\n");

@@ -14,8 +14,8 @@
 #include "glut_wrap.h"
 #include "readtex.h"
 
-#define FILE1 DEMOS_DATA_DIR "bw.rgb"
-#define FILE2 DEMOS_DATA_DIR "arch.rgb"
+#define FILE1 DEMOS_DATA_DIR "bw.png"
+#define FILE2 DEMOS_DATA_DIR "arch.png"
 
 
 static int Win;

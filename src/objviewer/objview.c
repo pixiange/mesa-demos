@@ -160,12 +160,12 @@ init_model(void)
 static void
 init_skybox(void)
 {
-   SkyboxTex = LoadSkyBoxCubeTexture("alpine_east.rgb",
-                                     "alpine_west.rgb",
-                                     "alpine_up.rgb",
-                                     "alpine_down.rgb",
-                                     "alpine_south.rgb",
-                                     "alpine_north.rgb");
+   SkyboxTex = LoadSkyBoxCubeTexture("alpine_east.png",
+                                     "alpine_west.png",
+                                     "alpine_up.png",
+                                     "alpine_down.png",
+                                     "alpine_south.png",
+                                     "alpine_north.png");
    glmSpecularTexture(Model, SkyboxTex);
 }
 

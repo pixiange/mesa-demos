@@ -21,9 +21,9 @@
  * fs shader.frag
  * uniform GL_FLOAT pi 3.14159
  * uniform GL_FLOAT_VEC4 v1 1.0 0.5 0.2 0.3
- * texture 0 2D texture0.rgb
- * texture 1 CUBE texture1.rgb
- * texture 2 RECT texture2.rgb
+ * texture 0 2D texture0.png
+ * texture 1 CUBE texture1.png
+ * texture 2 RECT texture2.png
  *
  */
 

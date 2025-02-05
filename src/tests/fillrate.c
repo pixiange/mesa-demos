@@ -13,8 +13,8 @@
 #include "glut_wrap.h"
 #include "readtex.h"
 
-#define TEXTURE_1_FILE DEMOS_DATA_DIR "tile.rgb"
-#define TEXTURE_2_FILE DEMOS_DATA_DIR "reflect.rgb"
+#define TEXTURE_1_FILE DEMOS_DATA_DIR "tile.png"
+#define TEXTURE_2_FILE DEMOS_DATA_DIR "reflect.png"
 
 static int Win;
 static int Width = 1010, Height = 1010;

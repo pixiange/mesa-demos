@@ -12,7 +12,7 @@
 #include "glut_wrap.h"
 #include "../util/readtex.c"
 
-#define IMAGE_FILE DEMOS_DATA_DIR "girl.rgb"
+#define IMAGE_FILE DEMOS_DATA_DIR "girl.png"
 
 static GLfloat Zrot = 0;
 

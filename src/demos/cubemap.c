@@ -523,12 +523,12 @@ static void load(GLenum target, const char *filename,
 
 static void load_envmaps(void)
 {
-   load(GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB, "right.rgb", GL_TRUE, GL_FALSE);
-   load(GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB, "left.rgb", GL_TRUE, GL_FALSE);
-   load(GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB, "top.rgb", GL_FALSE, GL_TRUE);
-   load(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB, "bottom.rgb", GL_FALSE, GL_TRUE);
-   load(GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB, "front.rgb", GL_TRUE, GL_FALSE);
-   load(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB, "back.rgb", GL_TRUE, GL_FALSE);
+   load(GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB, "right.png", GL_TRUE, GL_FALSE);
+   load(GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB, "left.png", GL_TRUE, GL_FALSE);
+   load(GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB, "top.png", GL_FALSE, GL_TRUE);
+   load(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB, "bottom.png", GL_FALSE, GL_TRUE);
+   load(GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB, "front.png", GL_TRUE, GL_FALSE);
+   load(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB, "back.png", GL_TRUE, GL_FALSE);
 }
 
 

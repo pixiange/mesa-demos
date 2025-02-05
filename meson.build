@@ -58,6 +58,11 @@ dep_gles2 = dependency('glesv2', required : get_option('gles2'))
 dep_osmesa = dependency('osmesa', required : get_option('osmesa'))
 dep_egl = dependency('egl', required : get_option('egl'))
 dep_vulkan = dependency('vulkan', required : get_option('vulkan'))
+dep_png = dependency('libpng',
+  required : get_option('png'),
+  disabler : true,
+  version : '>=1.6.0'
+)
 
 dep_drm = dependency('libdrm',
   required : get_option('libdrm'),

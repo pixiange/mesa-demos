@@ -18,8 +18,8 @@
 
 #include "../util/readtex.c"   /* I know, this is a hack. */
 
-#define TEXTURE_1_FILE DEMOS_DATA_DIR "tile.rgb"
-#define TEXTURE_2_FILE DEMOS_DATA_DIR "reflect.rgb"
+#define TEXTURE_1_FILE DEMOS_DATA_DIR "tile.png"
+#define TEXTURE_2_FILE DEMOS_DATA_DIR "reflect.png"
 
 #define TEX0 1
 #define TEX1 2

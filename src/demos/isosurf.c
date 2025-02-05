@@ -36,7 +36,7 @@
 #include "glut_wrap.h"
 
 #include "readtex.h"
-#define TEXTURE_FILE DEMOS_DATA_DIR "reflect.rgb"
+#define TEXTURE_FILE DEMOS_DATA_DIR "reflect.png"
 
 #define LIT		0x00000001
 #define UNLIT		0x00000002

@@ -19,8 +19,8 @@
 
 #include "readtex.h"
 
-#define TEXTURE_1_FILE DEMOS_DATA_DIR "girl.rgb"
-#define TEXTURE_2_FILE DEMOS_DATA_DIR "reflect.rgb"
+#define TEXTURE_1_FILE DEMOS_DATA_DIR "girl.png"
+#define TEXTURE_2_FILE DEMOS_DATA_DIR "reflect.png"
 
 #define TEX0 1
 #define TEX7 8

@@ -19,45 +19,48 @@
 # SOFTWARE.
 
 progs = [
-  'array',
-  'bitmap',
-  'brick',
-  'bump',
-  'blinking-teapot',
-  'convolutions',
-  'deriv',
-  'fragcoord',
-  'fsraytrace',
-  'geom-outlining-150',
-  'identity',
-  'linktest',
-  'mandelbrot',
-  'multinoise',
-  'multitex',
-  'noise2',
-  'noise',
-  'pointcoord',
-  'points',
-  'samplers',
-  'shadow_sampler',
-  'shtest',
-  'simplex-noise',
-  'skinning',
-  'texaaline',
-  'texdemo1',
-  'toyball',
-  'trirast',
-  'twoside',
-  'vert-or-frag-only',
-  'vert-tex',
-  'vsraytrace',
+  ['array', []],
+  ['bitmap', []],
+  ['brick', []],
+  ['bump', [idep_readtex]],
+  ['blinking-teapot', []],
+  ['convolutions', [idep_readtex]],
+  ['deriv', []],
+  ['fragcoord', []],
+  ['fsraytrace', []],
+  ['geom-outlining-150', []],
+  ['identity', []],
+  ['linktest', []],
+  ['mandelbrot', []],
+  ['multinoise', []],
+  ['multitex', [idep_readtex]],
+  ['noise2', []],
+  ['noise', []],
+  ['pointcoord', []],
+  ['points', []],
+  ['samplers', []],
+  ['shadow_sampler', []],
+  ['shtest', [idep_readtex]],
+  ['simplex-noise', []],
+  ['skinning', []],
+  ['texaaline', []],
+  ['texdemo1', [idep_readtex]],
+  ['toyball', []],
+  ['trirast', []],
+  ['twoside', []],
+  ['vert-or-frag-only', []],
+  ['vert-tex', []],
+  ['vsraytrace', []],
 ]
-foreach p : progs
+base_deps = [
+  dep_gl, dep_glu, dep_glut, dep_m, idep_glad, idep_util
+]
+foreach pair : progs
+  p = pair[0]
+  extra_deps = pair[1]
   executable(
     p, files(p + '.c'),
-    dependencies: [
-      dep_gl, dep_glu, dep_glut, dep_m, idep_glad, idep_util
-    ],
+    dependencies: base_deps + extra_deps,
     install: true
   )
 endforeach
