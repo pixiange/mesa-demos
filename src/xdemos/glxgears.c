@@ -103,6 +103,10 @@ static GLint samples = 0;               /* Choose visual with at least N
 static GLint swapinterval = 1;          /* Swap interval */
 static GLboolean use_srgb = GL_FALSE;
 static GLboolean animate = GL_TRUE;     /* Animation */
+static double run_time = -1.0;          /* Run for N seconds, -1 means forever */
+static int total_frames = 0;            /* Total frames rendered */
+static double total_start_time = -1.0;  /* Start time for total run */
+static GLfloat min_fps = -1.0;          /* Minimum FPS across intervals */
 static GLfloat eyesep = 5.0;            /* Eye separation. */
 static GLfloat fix_point = 40.0;        /* Fixation point distance.  */
 static GLfloat left, right, asp;        /* Stereo frustum params.  */
@@ -317,8 +321,10 @@ draw_gears(void)
 }
 
 
-/** Draw single frame, do SwapBuffers, compute FPS */
-static void
+/** Draw single frame, do SwapBuffers, compute FPS
+ *  Returns 0 to continue, 1 to exit (time limit reached)
+ */
+static int
 draw_frame(Display *dpy, Window win)
 {
    static int frames = 0;
@@ -330,6 +336,10 @@ draw_frame(Display *dpy, Window win)
    dt = t - tRot0;
    tRot0 = t;
 
+   /* Record the start time for total run statistics */
+   if (total_start_time < 0.0)
+      total_start_time = t;
+
    if (animate) {
       /* advance rotation for next frame */
       angle += 70.0 * dt; /* 70 degrees per second */
@@ -340,6 +350,7 @@ draw_frame(Display *dpy, Window win)
    glXSwapBuffers(dpy, win);
 
    frames++;
+   total_frames++;
 
    if (tRate0 < 0.0)
       tRate0 = t;
@@ -349,9 +360,17 @@ draw_frame(Display *dpy, Window win)
       printf("%d frames in %3.1f seconds = %6.3f FPS\n", frames, seconds,
              fps);
       fflush(stdout);
+      if (min_fps < 0.0 || fps < min_fps)
+         min_fps = fps;
       tRate0 = t;
       frames = 0;
    }
+
+   /* Check if the time limit has been reached */
+   if (run_time > 0.0 && (t - total_start_time) >= run_time)
+      return 1;
+
+   return 0;
 }
 
 
@@ -765,7 +784,8 @@ event_loop(Display *dpy, Window win)
             break;
       }
 
-      draw_frame(dpy, win);
+      if (draw_frame(dpy, win))
+         return;
    }
 }
 
@@ -778,6 +798,7 @@ usage(void)
    printf("  -srgb                   run in sRGB mode\n");
    printf("  -stereo                 run in stereo mode\n");
    printf("  -frames N               render N frames and exit\n");
+   printf("  -time N                 run for N seconds and exit\n");
    printf("  -samples N              run in multisample mode with at least"
           "N samples\n");
    printf("  -swapinterval N         set swap interval to N frames"
@@ -817,6 +838,10 @@ main(int argc, char *argv[])
       }
       else if (i < argc - 1 && strcmp(argv[i], "-frames") == 0) {
          frames = strtol(argv[i + 1], NULL, 10);
+         ++i;
+      }
+      else if (i < argc - 1 && strcmp(argv[i], "-time") == 0) {
+         run_time = strtod(argv[i + 1], NULL);
          ++i;
       }
       else if (i < argc - 1 && strcmp(argv[i], "-samples") == 0) {
@@ -877,6 +902,20 @@ main(int argc, char *argv[])
    reshape(winWidth, winHeight);
 
    event_loop(dpy, win);
+
+   /* Print summary statistics */
+   if (total_frames > 0 && total_start_time >= 0.0) {
+      double total_seconds = current_time() - total_start_time;
+      if (total_seconds > 0.0) {
+         GLfloat avg_fps = (double)total_frames / total_seconds;
+         printf("\n");
+         printf("Total: %d frames in %3.1f seconds = %6.3f average FPS\n",
+                total_frames, total_seconds, avg_fps);
+         if (min_fps >= 0.0)
+            printf("Minimum FPS: %6.3f\n", min_fps);
+         fflush(stdout);
+      }
+   }
 
    glDeleteLists(gear1, 1);
    glDeleteLists(gear2, 1);
