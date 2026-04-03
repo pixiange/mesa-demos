@@ -1,7 +1,17 @@
 # Dockerfile for building mesa-demos
 #
+# This Dockerfile clones the mesa-demos source code from Git, builds it with
+# Meson, and installs the binaries under /usr/local.
+#
 # Build:
 #   docker build -t mesa-demos .
+#
+# Build a specific branch or tag:
+#   docker build --build-arg MESA_DEMOS_BRANCH=mesa-demos-9.0.0 -t mesa-demos .
+#
+# Use a custom repository URL (e.g. a fork):
+#   docker build --build-arg MESA_DEMOS_REPO=https://github.com/user/mesa-demos.git \
+#     -t mesa-demos .
 #
 # If you are behind a firewall or have limited connectivity to the default
 # Debian/PyPI servers, you can specify alternative mirrors:
@@ -17,8 +27,6 @@
 #   PYPI_INDEX: https://mirrors.aliyun.com/pypi/simple/
 #               https://pypi.tuna.tsinghua.edu.cn/simple/
 #               https://mirrors.ustc.edu.cn/pypi/web/simple/
-#
-# The built binaries will be installed under /usr/local inside the image.
 
 FROM debian:bookworm-slim
 
@@ -27,6 +35,9 @@ FROM debian:bookworm-slim
 ARG APT_MIRROR=
 # Optional: set to an alternative PyPI index URL.
 ARG PYPI_INDEX=
+# Repository URL and branch/tag to clone
+ARG MESA_DEMOS_REPO=https://gitlab.freedesktop.org/mesa/demos.git
+ARG MESA_DEMOS_BRANCH=main
 
 # Switch APT sources to the specified mirror (if provided)
 RUN if [ -n "$APT_MIRROR" ]; then \
@@ -36,6 +47,7 @@ RUN if [ -n "$APT_MIRROR" ]; then \
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    ca-certificates \
     pkg-config \
     ninja-build \
     python3-pip \
@@ -63,11 +75,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
        ${PYPI_INDEX:+--index-url "$PYPI_INDEX"} meson \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the source tree into the image
+# Clone the mesa-demos source code
 WORKDIR /src
-COPY . .
+RUN git clone --depth 1 --branch "${MESA_DEMOS_BRANCH}" "${MESA_DEMOS_REPO}" mesa-demos
 
 # Configure and build
+WORKDIR /src/mesa-demos
 RUN meson setup _build \
     --prefix /usr/local \
     --buildtype release \
